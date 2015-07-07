@@ -41,4 +41,16 @@ element = driver.find_element_by_id("confirmBtn")
 element.click()
 
 time.sleep(5)
+
+main_frame = driver.find_element_by_name("mainFrame")
+driver.switch_to.frame(main_frame)
+
+#element = driver.find_element_by_xpath("//body/table[3]")
+row_prefix = "//body/table[3]/tbody/tr/td/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[2]/td"
+account_xpath = row_prefix + "[1]"
+currency_type = row_prefix + "[2]"
+element = driver.find_element_by_xpath(account_xpath)
+print(element.text)
+element = driver.find_element_by_xpath(currency_type)
+print(element.text)
 driver.close()
