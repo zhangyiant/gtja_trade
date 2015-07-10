@@ -4,6 +4,7 @@ Created on Jul 8, 2015
 @author: yizhang
 '''
 from gtja.Trade import Trade
+
 import csv
 import time
 
@@ -19,7 +20,14 @@ trade = Trade(account_name, password)
 
 trade.login()
 
-time.sleep(5)
+time.sleep(3)
 
-trade.get_info()
+trade.enter_stock_menu()
+
+time.sleep(3)
+
+account_info = trade.get_account_info()
+
+print(account_info)
+
 trade.close()
