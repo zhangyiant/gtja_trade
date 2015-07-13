@@ -6,7 +6,30 @@ Created on Jul 8, 2015
 from selenium import webdriver
 import time
 
-class Account_Info:
+class StockInfo:
+    def __init__(self):
+        self.stock_symbol = ""
+        self.stock_name = ""
+        self.actual_amount = 0
+        self.available_amount = 0
+        self.value = 0
+        self.price = 0
+        self.cost = 0
+        self.gain = 0
+        return
+    
+    def __str__(self):
+        result = "stock_symbol: " + self.stock_symbol
+        result += ",stock_name: " + self.stock_name
+        result += ",actual_amount: "  + self.actual_amount
+        result += ",available_amount: " + self.available_amount
+        result += ",value: " + self.value
+        result += ",price: " + self.price
+        result += ",cost: " + self.cost
+        result += ",gain: " + self.gain
+        return result    
+    
+class AccountInfo:
     def __init__(self):
         self.account_name = ""
         self.currency = ""
@@ -72,8 +95,54 @@ class Trade:
         element.click()
         
         return
+    
+    def get_stock_info(self):
         
+        self.enter_stock_menu()
+
+        time.sleep(3)
+
+        self.driver.switch_to.default_content()
+        
+        main_frame = self.driver.find_element_by_name("mainFrame")
+        self.driver.switch_to.frame(main_frame)
+        
+        #element = driver.find_element_by_xpath("//body/table[3]")
+        row_prefix = "//body/table[3]/tbody/tr/td/table[4]/tbody/tr[2]/td"
+        stock_symbol_xpath = row_prefix + "[2]"
+        stock_name_xpath = row_prefix + "[3]"
+        actual_amount_xpath = row_prefix + "[4]"
+        available_amount_xpath = row_prefix + "[5]"
+        value_xpath = row_prefix + "[6]"
+        price_xpath = row_prefix + "[7]"
+        cost_xpath = row_prefix + "[8]"
+        gain_xpath = row_prefix + "[9]"
+        
+        stock_info = StockInfo()
+        element = self.driver.find_element_by_xpath(stock_symbol_xpath)
+        stock_info.stock_symbol = element.text
+        element = self.driver.find_element_by_xpath(stock_name_xpath)
+        stock_info.stock_name = element.text
+        element = self.driver.find_element_by_xpath(actual_amount_xpath)
+        stock_info.actual_amount = element.text
+        element = self.driver.find_element_by_xpath(available_amount_xpath)
+        stock_info.available_amount = element.text
+        element = self.driver.find_element_by_xpath(value_xpath)
+        stock_info.value = element.text
+        element = self.driver.find_element_by_xpath(price_xpath)
+        stock_info.price = element.text
+        element = self.driver.find_element_by_xpath(cost_xpath)
+        stock_info.cost = element.text
+        element = self.driver.find_element_by_xpath(gain_xpath)
+        stock_info.gain = element.text
+        
+        return stock_info
+                   
     def get_account_info(self):
+        
+        # enter stock menu
+        self.enter_stock_menu()
+        time.sleep(3)
         
         self.driver.switch_to.default_content()
         
@@ -91,7 +160,7 @@ class Trade:
         total_value_xpath = row_prefix + "[7]"
         bank_name_xpath = row_prefix + "[8]"
         
-        account_info = Account_Info()
+        account_info = AccountInfo()
         element = self.driver.find_element_by_xpath(account_xpath)
         account_info.account_name = element.text
         element = self.driver.find_element_by_xpath(currency_xpath)

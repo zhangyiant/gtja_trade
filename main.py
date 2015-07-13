@@ -22,12 +22,8 @@ trade.login()
 
 time.sleep(3)
 
-trade.enter_stock_menu()
+stock_info = trade.get_stock_info()
 
-time.sleep(3)
-
-account_info = trade.get_account_info()
-
-print(account_info)
+print(stock_info)
 
 trade.close()
