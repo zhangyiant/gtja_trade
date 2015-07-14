@@ -21,12 +21,12 @@ class StockInfo:
     def __str__(self):
         result = "stock_symbol: " + self.stock_symbol
         result += ",stock_name: " + self.stock_name
-        result += ",actual_amount: "  + self.actual_amount
-        result += ",available_amount: " + self.available_amount
-        result += ",value: " + self.value
-        result += ",price: " + self.price
-        result += ",cost: " + self.cost
-        result += ",gain: " + self.gain
+        result += ",actual_amount: {0}".format(self.actual_amount)
+        result += ",available_amount: {0}".format(self.available_amount)
+        result += ",value: {0}".format(self.value)
+        result += ",price: {0}".format(self.price)
+        result += ",cost: {0}".format(self.cost)
+        result += ",gain: {0}".format(self.gain)
         return result    
     
 class AccountInfo:
@@ -44,11 +44,11 @@ class AccountInfo:
     def __str__(self):
         result = "account_name: " + self.account_name
         result += ", currency: " + self.currency
-        result += ",cash_balance: " + self.cash_balance
-        result += ",available_balance: " + self.available_balance
-        result += ",extractable_balance: " + self.extractable_balance
-        result += ",current_value: " + self.current_value
-        result += ",total_value: " + self.total_value
+        result += ",cash_balance: {0}".format(self.cash_balance)
+        result += ",available_balance: {0}".format(self.available_balance)
+        result += ",extractable_balance: {0}".format(self.extractable_balance)
+        result += ",current_value: {0}".format(self.current_value)
+        result += ",total_value: {0}".format(self.total_value)
         result += ",bank_name: " + self.bank_name
         return result
 
@@ -96,7 +96,7 @@ class Trade:
         
         return
     
-    def get_stock_info(self):
+    def get_stock_info_list(self):
         
         self.enter_stock_menu()
 
@@ -107,37 +107,28 @@ class Trade:
         main_frame = self.driver.find_element_by_name("mainFrame")
         self.driver.switch_to.frame(main_frame)
         
-        #element = driver.find_element_by_xpath("//body/table[3]")
-        row_prefix = "//body/table[3]/tbody/tr/td/table[4]/tbody/tr[2]/td"
-        stock_symbol_xpath = row_prefix + "[2]"
-        stock_name_xpath = row_prefix + "[3]"
-        actual_amount_xpath = row_prefix + "[4]"
-        available_amount_xpath = row_prefix + "[5]"
-        value_xpath = row_prefix + "[6]"
-        price_xpath = row_prefix + "[7]"
-        cost_xpath = row_prefix + "[8]"
-        gain_xpath = row_prefix + "[9]"
+        tbody_xpath = '//body/table[3]/tbody/tr/td/table[4]/tbody'
         
-        stock_info = StockInfo()
-        element = self.driver.find_element_by_xpath(stock_symbol_xpath)
-        stock_info.stock_symbol = element.text
-        element = self.driver.find_element_by_xpath(stock_name_xpath)
-        stock_info.stock_name = element.text
-        element = self.driver.find_element_by_xpath(actual_amount_xpath)
-        stock_info.actual_amount = element.text
-        element = self.driver.find_element_by_xpath(available_amount_xpath)
-        stock_info.available_amount = element.text
-        element = self.driver.find_element_by_xpath(value_xpath)
-        stock_info.value = element.text
-        element = self.driver.find_element_by_xpath(price_xpath)
-        stock_info.price = element.text
-        element = self.driver.find_element_by_xpath(cost_xpath)
-        stock_info.cost = element.text
-        element = self.driver.find_element_by_xpath(gain_xpath)
-        stock_info.gain = element.text
+        tbody_element = self.driver.find_element_by_xpath(tbody_xpath)
         
-        return stock_info
-                   
+        row_elements = tbody_element.find_elements_by_xpath("*")
+
+        stock_info_list = []
+        for row_element in row_elements[1:-1]:
+            column_elements = row_element.find_elements_by_tag_name("td")
+            stock_info = StockInfo()
+            stock_info.stock_symbol = column_elements[1].text
+            stock_info.stock_name = column_elements[2].text
+            stock_info.actual_amount = column_elements[3].text
+            stock_info.available_amount = column_elements[4].text
+            stock_info.value = column_elements[5].text
+            stock_info.price = column_elements[6].text
+            stock_info.cost = column_elements[7].text
+            stock_info.gain = column_elements[8].text
+            stock_info_list.append(stock_info)
+            
+        return stock_info_list
+    
     def get_account_info(self):
         
         # enter stock menu

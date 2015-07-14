@@ -22,8 +22,10 @@ trade.login()
 
 time.sleep(3)
 
-stock_info = trade.get_stock_info()
+stock_info_list = trade.get_stock_info_list()
 
-print(stock_info)
+for stock_info in stock_info_list:
+    print(stock_info)
+
 
 trade.close()
