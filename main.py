@@ -22,10 +22,8 @@ trade.login()
 
 time.sleep(3)
 
-stock_info_list = trade.get_stock_info_list()
+stock_price = trade.buy_stock("601398", 5.00, 100)
 
-for stock_info in stock_info_list:
-    print(stock_info)
-
+print(stock_price)
 
 trade.close()

@@ -102,10 +102,7 @@ class Trade:
 
         time.sleep(3)
 
-        self.driver.switch_to.default_content()
-        
-        main_frame = self.driver.find_element_by_name("mainFrame")
-        self.driver.switch_to.frame(main_frame)
+        self.select_main_frame()
         
         tbody_xpath = '//body/table[3]/tbody/tr/td/table[4]/tbody'
         
@@ -135,10 +132,7 @@ class Trade:
         self.enter_stock_menu()
         time.sleep(3)
         
-        self.driver.switch_to.default_content()
-        
-        main_frame = self.driver.find_element_by_name("mainFrame")
-        self.driver.switch_to.frame(main_frame)
+        self.select_main_frame()
         
         #element = driver.find_element_by_xpath("//body/table[3]")
         row_prefix = "//body/table[3]/tbody/tr/td/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[2]/td"
@@ -173,10 +167,7 @@ class Trade:
     
     def enter_stock_menu(self):
         
-        self.driver.switch_to.default_content()
-        
-        top_frame = self.driver.find_element_by_name("topFrame")
-        self.driver.switch_to.frame(top_frame)
+        self.select_top_frame()
         
         stock_menu_element = self.driver.find_element_by_xpath('//a[@title="股票"]')
         
@@ -186,5 +177,95 @@ class Trade:
         
         return
     
+    def select_main_frame(self):
+        self.driver.switch_to.default_content()
+        main_frame = self.driver.find_element_by_name("mainFrame")
+        self.driver.switch_to.frame(main_frame)
+        return
+    
+    def select_top_frame(self):
+        self.driver.switch_to.default_content()
+        top_frame = self.driver.find_element_by_name("topFrame")
+        self.driver.switch_to.frame(top_frame)
+        return
+    
+    def select_left_frame(self):
+        self.driver.switch_to.default_content()
+        left_frame = self.driver.find_element_by_name("leftFrame")
+        self.driver.switch_to.frame(left_frame)
+        return
+    
+    def select_menu_frame(self):
+        self.select_left_frame()
+        menu_frame = self.driver.find_element_by_name("menuiframe")
+        self.driver.switch_to.frame(menu_frame)
+        return
+        
+    def get_stock_price(self, symbol):
+        symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
+        refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
+        price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[4]/td[2]"
+        
+        self.enter_stock_menu()
+        time.sleep(3)
+        self.select_menu_frame()
+        element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
+        element.click()
+        time.sleep(3)
+        
+        self.select_main_frame()
+        element = self.driver.find_element_by_xpath(symbol_input_xpath)
+        element.send_keys(symbol)
+        element = self.driver.find_element_by_xpath(refresh_xpath)
+        element.click()
+        time.sleep(3)
+        element = self.driver.find_element_by_xpath(price_xpath)
+        price = element.text
+        
+        return price
+    
+    def buy_stock(self, symbol, price, amount):
+        symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
+        refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
+        buy_price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[7]/td[2]/input"
+        buy_amount_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[10]/td[2]/input"
+        buy_button_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[2]/tbody/tr/td[2]/table/tbody/tr/td[1]/table/tbody/tr/td/input"
+        normal_delegate_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[5]/td[2]/input[1]"
+        
+        self.enter_stock_menu()
+        time.sleep(3)
+        self.select_menu_frame()
+        element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
+        element.click()
+        time.sleep(3)
+        
+        self.select_main_frame()
+        element = self.driver.find_element_by_xpath(symbol_input_xpath)
+        element.send_keys(symbol)
+        
+        element = self.driver.find_element_by_xpath(refresh_xpath)
+        element.click()
+        time.sleep(3)
+        
+        element = self.driver.find_element_by_xpath(normal_delegate_xpath)
+        element.click()
+        
+        element = self.driver.find_element_by_xpath(buy_price_xpath)
+        element.clear()
+        element.send_keys("{0}".format(price))
+        
+        element = self.driver.find_element_by_xpath(buy_amount_xpath)
+        element.send_keys("{0}".format(amount))
+        
+        element = self.driver.find_element_by_xpath(buy_button_xpath)
+        element.click()
+        
+        alert = self.driver.switch_to.alert
+        alert.accept()
+
+        time.sleep(10)
+        
+        return       
+        
     def close(self):
         self.driver.close()
