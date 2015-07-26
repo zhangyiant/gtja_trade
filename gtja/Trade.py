@@ -4,6 +4,7 @@ Created on Jul 8, 2015
 @author: yizhang
 '''
 from selenium import webdriver
+from selenium.common.exceptions import NoAlertPresentException
 import time
 
 class StockInfo:
@@ -67,7 +68,14 @@ class Trade:
         self.driver = webdriver.Firefox()
         return
 
-        
+    def is_alert_present(self):
+        try:
+            alert = self.driver.switch_to.alert
+            alert.text
+            return True
+        except NoAlertPresentException:
+            return False
+    
     def login(self):
         self.driver.get("http://trade.gtja.com")
         print(self.driver.title)
@@ -260,8 +268,14 @@ class Trade:
         element = self.driver.find_element_by_xpath(buy_button_xpath)
         element.click()
         
-        alert = self.driver.switch_to.alert
-        alert.accept()
+        if (self.is_alert_present()):
+            alert = self.driver.switch_to.alert
+            print(alert.text)
+            alert.accept()
+            if (self.is_alert_present()):
+                alert = self.driver.switch_to.alert
+                print(alert.text)
+                alert.accept()
 
         time.sleep(10)
         
