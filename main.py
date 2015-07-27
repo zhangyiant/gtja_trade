@@ -22,7 +22,7 @@ trade.login()
 
 time.sleep(3)
 
-stock_price = trade.buy_stock("601398", 5.00, 100)
+stock_price = trade.get_current_commission()
 
 print(stock_price)
 

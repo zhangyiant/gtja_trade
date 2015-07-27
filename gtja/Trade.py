@@ -232,6 +232,23 @@ class Trade:
         
         return price
     
+    def get_current_commission(self):
+        current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
+        
+        self.enter_stock_menu()
+        time.sleep(3)
+        self.select_menu_frame()
+        
+        element = self.driver.find_element_by_xpath(current_commission_xpath)
+        element.click()
+        
+        test_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody/tr[2]/td[2]"
+        test_xpath = "/html/body"
+        self.select_main_frame()
+        element = self.driver.find_element_by_xpath(test_xpath)
+        print(element.text)
+        return
+    
     def buy_stock(self, symbol, price, amount):
         symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
         refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
