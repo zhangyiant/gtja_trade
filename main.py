@@ -22,8 +22,9 @@ trade.login()
 
 time.sleep(3)
 
-stock_price = trade.get_current_commission()
+c_list = trade.get_current_commission()
 
-print(stock_price)
+for c in c_list:
+    print(c)
 
 trade.close()

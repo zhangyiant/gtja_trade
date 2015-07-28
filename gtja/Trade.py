@@ -7,6 +7,33 @@ from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException
 import time
 
+class CurrentCommissionInfo:
+    def __init__(self):
+        self.shareholder_code = ""
+        self.commission_id = 0
+        self.stock_symbol = ""
+        self.stock_name = ""
+        self.type = ""
+        self.price = 0.0
+        self.amount = 0
+        self.datetime = ""
+        self.trade_volumn = 0
+        self.trade_state = ""
+        return
+    
+    def __str__(self):
+        result = "shareholder_code: " + self.shareholder_code
+        result += ", commission_id: {0}".format(self.commission_id)
+        result += ", stock_symbol: {0}".format(self.stock_symbol)
+        result += ", stock_name: {0}".format(self.stock_name)
+        result += ", type: " + self.type
+        result += ", price: {0}".format(self.price)
+        result += "., amount: {0}".format(self.amount)
+        result += ", datetime: {0}".format(self.datetime)
+        result += ", trade_volumn: {0}".format(self.trade_volumn)
+        result += ", trade_state: {0}".format(self.trade_state)
+        return result
+    
 class StockInfo:
     def __init__(self):
         self.stock_symbol = ""
@@ -234,6 +261,7 @@ class Trade:
     
     def get_current_commission(self):
         current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
+        current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
         
         self.enter_stock_menu()
         time.sleep(3)
@@ -242,12 +270,29 @@ class Trade:
         element = self.driver.find_element_by_xpath(current_commission_xpath)
         element.click()
         
-        test_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody/tr[2]/td[2]"
-        test_xpath = "/html/body"
         self.select_main_frame()
-        element = self.driver.find_element_by_xpath(test_xpath)
-        print(element.text)
-        return
+
+        tbody_element = self.driver.find_element_by_xpath(current_commission_table_tbody_xpath)
+        
+        row_elements = tbody_element.find_elements_by_xpath("*")
+
+        current_commission_list = []
+        for row_element in row_elements[1:-1]:
+            column_elements = row_element.find_elements_by_tag_name("td")
+            current_commission_info = CurrentCommissionInfo()
+            current_commission_info.shareholder_code = column_elements[1].text
+            current_commission_info.commission_id = column_elements[2].text
+            current_commission_info.stock_symbol = column_elements[3].text
+            current_commission_info.stock_name = column_elements[4].text
+            current_commission_info.type= column_elements[5].text
+            current_commission_info.price = column_elements[6].text
+            current_commission_info.amount = column_elements[7].text
+            current_commission_info.datetime = column_elements[8].text
+            current_commission_info.trade_volumn = column_elements[9].text
+            current_commission_info.trade_state = column_elements[10].text
+            current_commission_list.append(current_commission_info)
+
+        return current_commission_list
     
     def buy_stock(self, symbol, price, amount):
         symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
