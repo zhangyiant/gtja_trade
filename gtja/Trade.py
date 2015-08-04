@@ -6,6 +6,7 @@ Created on Jul 8, 2015
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException
 import time
+from datetime import datetime
 
 class CurrentCommissionInfo:
     def __init__(self):
@@ -287,7 +288,14 @@ class Trade:
             current_commission_info.type= column_elements[5].text
             current_commission_info.price = column_elements[6].text
             current_commission_info.amount = column_elements[7].text
-            current_commission_info.datetime = column_elements[8].text
+            datetime_string = column_elements[8].text
+            year = int(datetime_string[0:4])
+            month = int(datetime_string[4:6])
+            day = int(datetime_string[6:8])
+            hour = int(datetime_string[8:10])
+            minute = int(datetime_string[10:12])
+            second = int(datetime_string[12:14])
+            current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
             current_commission_info.trade_volumn = column_elements[9].text
             current_commission_info.trade_state = column_elements[10].text
             current_commission_list.append(current_commission_info)
