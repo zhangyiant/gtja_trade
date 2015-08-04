@@ -11,13 +11,13 @@ from datetime import datetime
 class CurrentCommissionInfo:
     def __init__(self):
         self.shareholder_code = ""
-        self.commission_id = 0
+        self.commission_id = ""
         self.stock_symbol = ""
         self.stock_name = ""
         self.type = ""
         self.price = 0.0
         self.amount = 0
-        self.datetime = ""
+        self.datetime = datetime(1900,1,1)
         self.trade_volumn = 0
         self.trade_state = ""
         return
@@ -260,7 +260,19 @@ class Trade:
         
         return price
     
-    def get_current_commission(self):
+    def get_commission_state(self, commission_id):
+        commission_list = self.get_current_commission_list()
+        found = False
+        for commission in commission_list:
+            if (commission.commission_id == commission_id):
+                found = True
+                break
+        if (found):
+            return commission.trade_state
+        else:
+            return "Error"
+        
+    def get_current_commission_list(self):
         current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
         current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
         
@@ -286,8 +298,8 @@ class Trade:
             current_commission_info.stock_symbol = column_elements[3].text
             current_commission_info.stock_name = column_elements[4].text
             current_commission_info.type= column_elements[5].text
-            current_commission_info.price = column_elements[6].text
-            current_commission_info.amount = column_elements[7].text
+            current_commission_info.price = float(column_elements[6].text)
+            current_commission_info.amount = int(float(column_elements[7].text))
             datetime_string = column_elements[8].text
             year = int(datetime_string[0:4])
             month = int(datetime_string[4:6])
@@ -296,7 +308,7 @@ class Trade:
             minute = int(datetime_string[10:12])
             second = int(datetime_string[12:14])
             current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
-            current_commission_info.trade_volumn = column_elements[9].text
+            current_commission_info.trade_volumn = int(column_elements[9].text)
             current_commission_info.trade_state = column_elements[10].text
             current_commission_list.append(current_commission_info)
 
@@ -347,9 +359,78 @@ class Trade:
                 print(alert.text)
                 alert.accept()
 
-        time.sleep(10)
+        curr_datetime = datetime.now()
+        print(curr_datetime)
         
-        return       
+        commission_id = self.get_last_commission_id(symbol, amount)
         
+        print(commission_id)
+        
+        return commission_id       
+
+    def sell_stock(self, symbol, price, amount):
+        symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
+        refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
+        sell_price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[6]/td[2]/input"
+        sell_amount_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[8]/td[2]/input"
+        sell_button_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[2]/tbody/tr/td[2]/table/tbody/tr/td[1]/table/tbody/tr/td/input"
+        normal_delegate_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[4]/td[2]/input[1]"
+
+        self.enter_stock_menu()
+        time.sleep(3)
+        self.select_menu_frame()
+        element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[2]/td/a")
+        element.click()
+        time.sleep(3)
+        
+        self.select_main_frame()
+        element = self.driver.find_element_by_xpath(symbol_input_xpath)
+        element.send_keys(symbol)
+        
+        element = self.driver.find_element_by_xpath(refresh_xpath)
+        element.click()
+        time.sleep(3)
+        
+        element = self.driver.find_element_by_xpath(normal_delegate_xpath)
+        element.click()
+        
+        element = self.driver.find_element_by_xpath(sell_price_xpath)
+        element.clear()
+        element.send_keys("{0}".format(price))
+        
+        element = self.driver.find_element_by_xpath(sell_amount_xpath)
+        element.send_keys("{0}".format(amount))
+        
+        element = self.driver.find_element_by_xpath(sell_button_xpath)
+        element.click()
+         
+        if (self.is_alert_present()):
+            alert = self.driver.switch_to.alert
+            print(alert.text)
+            alert.accept()
+            if (self.is_alert_present()):
+                alert = self.driver.switch_to.alert
+                print(alert.text)
+                alert.accept()
+ 
+        curr_datetime = datetime.now()
+        print(curr_datetime)
+         
+        commission_id = self.get_last_commission_id(symbol, amount)
+         
+        print(commission_id)
+         
+        return commission_id       
+    
+    def get_last_commission_id(self, symbol, amount):
+        commission_list = self.get_current_commission_list()
+        
+        commission = commission_list[-1]
+        print(commission)
+        if (commission.stock_symbol == symbol and commission.amount == amount):
+            return commission.commission_id
+        else:
+            return ""
+           
     def close(self):
         self.driver.close()

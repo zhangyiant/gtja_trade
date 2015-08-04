@@ -22,9 +22,11 @@ trade.login()
 
 time.sleep(3)
 
-c_list = trade.get_current_commission()
+#commission_id = trade.buy_stock("601398", 4.34, 100)
 
-for c in c_list:
-    print(c)
+#commission_id = trade.get_last_commission_id("601398", 100)
+
+commission_id = trade.sell_stock("601398", 5.12, 200)
+
 
 trade.close()
