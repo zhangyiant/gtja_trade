@@ -294,11 +294,12 @@ class Trade:
             column_elements = row_element.find_elements_by_tag_name("td")
             current_commission_info = CurrentCommissionInfo()
             current_commission_info.shareholder_code = column_elements[1].text
-            current_commission_info.commission_id = column_elements[2].text
+            current_commission_info.commission_id = int(column_elements[2].text)
             current_commission_info.stock_symbol = column_elements[3].text
             current_commission_info.stock_name = column_elements[4].text
             current_commission_info.type= column_elements[5].text
             current_commission_info.price = float(column_elements[6].text)
+
             current_commission_info.amount = int(float(column_elements[7].text))
             datetime_string = column_elements[8].text
             year = int(datetime_string[0:4])
@@ -308,6 +309,7 @@ class Trade:
             minute = int(datetime_string[10:12])
             second = int(datetime_string[12:14])
             current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
+
             current_commission_info.trade_volumn = int(column_elements[9].text)
             current_commission_info.trade_state = column_elements[10].text
             current_commission_list.append(current_commission_info)
