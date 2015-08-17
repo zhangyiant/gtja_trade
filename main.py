@@ -26,7 +26,23 @@ time.sleep(3)
 
 #commission_id = trade.get_last_commission_id("601398", 100)
 
-commission_id = trade.sell_stock("601398", 5.12, 200)
+symbol_list = ["601398", "601857"]
+
+def is_transaction_time():
+    return False
+
+def process_stock():
+    return
+
+while True:
+    # check time
+    if (not is_transaction_time()):
+        print("It's not transaction time now!")
+        break
+    
+    process_stock("601398")
+        
+#commission_id = trade.sell_stock("601398", 5.12, 200)
 
 
 trade.close()
