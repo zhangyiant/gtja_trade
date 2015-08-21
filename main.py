@@ -35,7 +35,7 @@ def is_transaction_time():
     t2 = datetime.time(9,0,0)
     t3 = datetime.time(11,30,0)
     t4 = datetime.time(13,0,0)
-    t5= datetime.time(15,30,0)
+    t5= datetime.time(15,0,0)
     if (t1 < t2):
         return False
     if (t1>=t2 and t1<=t3):
@@ -50,7 +50,7 @@ def is_transaction_time():
 def is_market_closed():
     td = datetime.datetime.now()
     t1 = td.time()
-    t2 = datetime.time(15,30,0)
+    t2 = datetime.time(15,0,0)
     if (t1 > t2):
         return True
     else:
