@@ -6,6 +6,7 @@ Created on 2015年8月24日
 from stock_db.db_stock import StockCashTable
 from stock_db.db_stock import StockCash
 from gtja.Trade import Trade
+from stock_holding_algorithm.simple_algorithm import SimpleAlgorithm
 
 class StockProcessor(object):
     '''
@@ -55,6 +56,17 @@ class StockProcessor(object):
         print("remaining_cash={0}".format(stock_cash.amount))
         print("stock_price={0}".format(stock_price))
         
+        simple_algorithm = SimpleAlgorithm(stock_symbol, 3.5, 8.5,
+                                           stock_price)
+        simple_algorithm.calculate()
+
+        buy_or_sell = simple_algorithm.get_suggested_buy_or_sell()
+        suggested_amount = simple_algorithm.get_suggested_amount()
+
+        result = "Buy or Sell: {0}\nAmount: {1}".format(buy_or_sell,
+                                                        suggested_amount)
+        print(result)
+
         return
         
     

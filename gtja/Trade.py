@@ -256,7 +256,7 @@ class Trade:
         element.click()
         time.sleep(3)
         element = self.driver.find_element_by_xpath(price_xpath)
-        price = element.text
+        price = float(element.text)
         
         return price
     
