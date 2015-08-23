@@ -4,6 +4,7 @@ Created on Jul 8, 2015
 @author: Yi Zhang
 '''
 from gtja.Trade import Trade
+from gtja.stockprocessor import StockProcessor
 
 import csv
 import time
@@ -16,18 +17,19 @@ with open("account_info.csv", newline="", encoding="utf-8") as f:
         password = row[1]
         break
 
-print(account_name, password)
-trade = Trade(account_name, password)
- 
-trade.login()
- 
-time.sleep(3)
 
 #commission_id = trade.buy_stock("601398", 4.34, 100)
 
 #commission_id = trade.get_last_commission_id("601398", 100)
 
-symbol_list = ["601398", "601857"]
+stock_processor = StockProcessor(account_name, password)
+print(account_name, password)
+ 
+stock_processor.login()
+ 
+time.sleep(3)
+
+stock_processor.set_stock_symbol_list(["601398", "601857"])
 
 def is_transaction_time():
     td = datetime.datetime.now()
@@ -55,10 +57,8 @@ def is_market_closed():
         return True
     else:
         return False
-    
-def process_stock(symbol):
-    print("process stock" + symbol)
-    return
+
+stock_symbol_list = ["601398", "601857"]
 
 while True:
     # check time
@@ -66,14 +66,16 @@ while True:
         print("market is close!")
         break
     
-    if (not is_transaction_time()):
-        print("It's not transaction time now!")
-        time.sleep(180)
-        continue
+#     if (not is_transaction_time()):
+#         print("It's not transaction time now!")
+#         time.sleep(180)
+#         continue
     
-    process_stock("601398")
-        
+    stock_symbol = stock_processor.get_one_stock()
+    stock_processor.process_stock(stock_symbol)
+    
+    break    
 #commission_id = trade.sell_stock("601398", 5.12, 200)
 
 
-trade.close()
+stock_processor.close()
