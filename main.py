@@ -3,19 +3,20 @@ Created on Jul 8, 2015
 
 @author: Yi Zhang
 '''
-from gtja.Trade import Trade
 from gtja.stockprocessor import StockProcessor
 
-import csv
 import time
 import datetime
 import configparser
-
+import stock_db.db_connection
 
 config = configparser.ConfigParser()
 config.read("gtja_trade.ini", encoding="utf-8")
 account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
+connection_string = config['Database'].get('connection')
+
+stock_db.db_connection.default_connection_string = connection_string
 
 #commission_id = trade.buy_stock("601398", 4.34, 100)
 
@@ -62,7 +63,7 @@ stock_symbol_list = ["601398"]
 while True:
     # check time
     if (is_market_closed()):
-        print("market is close!")
+        print("market is closed!")
         break
     
 #     if (not is_transaction_time()):
