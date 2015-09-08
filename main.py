@@ -9,14 +9,13 @@ from gtja.stockprocessor import StockProcessor
 import csv
 import time
 import datetime
+import configparser
 
-with open("account_info.csv", newline="", encoding="utf-8") as f:
-    reader = csv.reader(f)
-    for row in reader:
-        account_name = row[0]
-        password = row[1]
-        break
 
+config = configparser.ConfigParser()
+config.read("gtja_trade.ini", encoding="utf-8")
+account_name = config['Account'].get('account_name')
+password = config['Account'].get('password')
 
 #commission_id = trade.buy_stock("601398", 4.34, 100)
 
