@@ -5,6 +5,11 @@ Created on 2015年8月24日
 '''
 from stock_db.db_stock import StockCashTable
 from stock_db.db_stock import StockCash
+from stock_db.db_stock import StockPriceRangeTable
+from stock_db.db_stock import StockPriceRange
+
+import time
+
 from gtja.Trade import Trade
 from stock_holding_algorithm.simple_algorithm import SimpleAlgorithm
 
@@ -56,7 +61,13 @@ class StockProcessor(object):
         print("remaining_cash={0}".format(stock_cash.amount))
         print("stock_price={0}".format(stock_price))
         
-        simple_algorithm = SimpleAlgorithm(stock_symbol, 3.5, 8.5,
+        stock_price_range_table = StockPriceRangeTable()
+        stock_price_range = stock_price_range_table.get_stock_stock_price_range_by_symbol(stock_symbol)
+        price_low = stock_price_range.get_price_low()
+        price_high = stock_price_range.get_price_high()
+        
+        
+        simple_algorithm = SimpleAlgorithm(stock_symbol, price_low, price_high,
                                            stock_price)
         simple_algorithm.calculate()
 
@@ -66,6 +77,24 @@ class StockProcessor(object):
         result = "Buy or Sell: {0}\nAmount: {1}".format(buy_or_sell,
                                                         suggested_amount)
         print(result)
+        
+        if (buy_or_sell == "Buy"):
+            commission_id = self.trade.buy_stock(stock_symbol, stock_price, suggested_amount)
+            time.sleep(3)
+            commission_state = self.trade.get_commission_state(commission_id)
+            if (commission_state != "已成"):
+                # TODO: need to cancel the commission
+                pass
+        elif (buy_or_sell == "Sell"):
+            commission_id = self.trade.sell_stock(stock_symbol, stock_price, suggested_amount)
+            time.sleep(3)
+            commission_state = self.trade.get_commission_state(commission_id)
+            if (commission_state != "已成"):
+                # TODO: need to cancel the commission
+                pass
+        else:
+            print("Error!")
+            
 
         return
         
