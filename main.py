@@ -58,8 +58,6 @@ def is_market_closed():
     else:
         return False
 
-stock_symbol_list = ["601398"]
-
 while True:
     # check time
     if (is_market_closed()):
