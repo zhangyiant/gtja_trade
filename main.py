@@ -20,8 +20,6 @@ connection_string = config['Database'].get('connection')
 # set the DB connection string
 stock_db.db_connection.default_connection_string = connection_string
 
-#commission_id = trade.buy_stock("601398", 4.34, 100)
-
 #commission_id = trade.get_last_commission_id("601398", 100)
 
 stock_processor = StockProcessor(account_name, password)
@@ -68,15 +66,18 @@ while True:
         print("market is closed!")
         break
     
-#     if (not is_transaction_time()):
-#         print("It's not transaction time now!")
-#         time.sleep(180)
-#         continue
+    if (not is_transaction_time()):
+        print("It's not transaction time now!")
+        time.sleep(180)
+        continue
     
     stock_symbol = stock_processor.get_one_stock()
     stock_processor.process_stock(stock_symbol)
-    
-    break    
+
+#    commission_id = stock_processor.trade.buy_stock("601398", 4.20, 100)
+#    stock_processor.trade.cancel_commission(216527)
+#    print(commission_id)
+
 #commission_id = trade.sell_stock("601398", 5.12, 200)
 
 

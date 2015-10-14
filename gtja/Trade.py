@@ -271,7 +271,52 @@ class Trade:
             return commission.trade_state
         else:
             return "Error"
+    
+    def cancel_commission(self, commission_id):
+        current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
+        current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
         
+        self.enter_stock_menu()
+        time.sleep(3)
+        self.select_menu_frame()
+        
+        element = self.driver.find_element_by_xpath(current_commission_xpath)
+        element.click()
+        
+        self.select_main_frame()
+
+        tbody_element = self.driver.find_element_by_xpath(current_commission_table_tbody_xpath)
+        
+        row_elements = tbody_element.find_elements_by_xpath("*")
+
+        found = False
+        for row_element in row_elements[1:-1]:
+            column_elements = row_element.find_elements_by_tag_name("td")
+            row_commission_id = int(column_elements[2].text)
+            if (row_commission_id == commission_id):
+                # we find the row
+                found = True
+                break
+        
+        if found:
+            operation_element = column_elements[0]
+            cancel_element = operation_element.find_element_by_tag_name("a")
+            cancel_element.click()
+            if (self.is_alert_present()):
+                alert = self.driver.switch_to.alert
+                print(alert.text)
+                alert.accept()
+                if (self.is_alert_present()):
+                    alert = self.driver.switch_to.alert
+                    print(alert.text)
+                    alert.accept()
+            return 1
+        else:
+            print("Error, cannot find the element to cancel!")
+            return 0 
+
+        return
+            
     def get_current_commission_list(self):
         current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
         current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
