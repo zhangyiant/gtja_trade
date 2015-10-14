@@ -10,8 +10,8 @@ from stock_db.db_stock import StockPriceRange
 from stock_db.db_stock import StockTransactionTable
 from stock_db.db_stock import StockTransaction
 import datetime
-
 import time
+import logging
 
 from gtja.Trade import Trade
 from stock_holding_algorithm.simple_algorithm import SimpleAlgorithm
@@ -23,6 +23,7 @@ class StockProcessor(object):
 
 
     def __init__(self, account_name, password):
+        self.logger = logging.getLogger(__name__)
         self.stock_symbol_list = []
         self.stock_process_index = 0
         self.trade = Trade(account_name, password)
@@ -112,37 +113,44 @@ class StockProcessor(object):
         if (amount >= 100):
             self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
             self.update_cash_table(stock_symbol, cash_offset)
-            if (buy_or_sell == "Buy"):
-                commission_id = self.trade.buy_stock(stock_symbol, stock_price, amount)
-                time.sleep(3)
-                commission_state = self.trade.get_commission_state(commission_id)
-                if (commission_state != "已成"):
-                    result = self.trade.cancel_commission(commission_id)
-                    if (result != 1):
-                        commission_state = self.trade.get_commission_state(commission_id)
-                        if (commission_state == "已成"):
-                            self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
-                        else:
-                            print("Unknown error in cancelling transaction")
-                else:
-                    self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
-            elif (buy_or_sell == "Sell"):
-                commission_id = self.trade.sell_stock(stock_symbol, stock_price, amount)
-                time.sleep(3)
-                commission_state = self.trade.get_commission_state(commission_id)
-                if (commission_state != "已成"):
-                    result = self.trade.cancel_commission(commission_id)
-                    if (result != 1):
-                        commission_state = self.trade.get_commission_state(commission_id)
-                        if (commission_state == "已成"):
-                            self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
-                        else:
-                            print("Unknown error in cancelling transaction")
-                else:
-                    self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
-            else:
-                print("Error!")
-            
+            debug_msg = "stock_symbol: {0}\nbuy_or_sell: {1}\namount: {2}\nstock_price: {3}".format(stock_symbol,
+                                                                                                    buy_or_sell,
+                                                                                                    amount,
+                                                                                                    stock_price)
+            self.logger.debug(debug_msg)
+            debug_msg = "cash_offset: {0}".format(cash_offset)
+            self.logger.debug(debug_msg)
+#             if (buy_or_sell == "Buy"):
+#                 commission_id = self.trade.buy_stock(stock_symbol, stock_price, amount)
+#                 time.sleep(3)
+#                 commission_state = self.trade.get_commission_state(commission_id)
+#                 if (commission_state != "已成"):
+#                     result = self.trade.cancel_commission(commission_id)
+#                     if (result != 1):
+#                         commission_state = self.trade.get_commission_state(commission_id)
+#                         if (commission_state == "已成"):
+#                             self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
+#                         else:
+#                             print("Unknown error in cancelling transaction")
+#                 else:
+#                     self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
+#             elif (buy_or_sell == "Sell"):
+#                 commission_id = self.trade.sell_stock(stock_symbol, stock_price, amount)
+#                 time.sleep(3)
+#                 commission_state = self.trade.get_commission_state(commission_id)
+#                 if (commission_state != "已成"):
+#                     result = self.trade.cancel_commission(commission_id)
+#                     if (result != 1):
+#                         commission_state = self.trade.get_commission_state(commission_id)
+#                         if (commission_state == "已成"):
+#                             self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
+#                         else:
+#                             print("Unknown error in cancelling transaction")
+#                 else:
+#                     self.add_transaction(stock_symbol, buy_or_sell, amount, stock_price)
+#             else:
+#                 print("Error!")
+#             
 
         return
         

@@ -9,6 +9,16 @@ import time
 import datetime
 import configparser
 import stock_db.db_connection
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.ERROR)
+fh = logging.FileHandler('stock.log', encoding="utf-8")
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 # read configuration
 config = configparser.ConfigParser()
