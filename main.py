@@ -39,7 +39,7 @@ stock_processor.login()
  
 time.sleep(3)
 
-stock_processor.set_stock_symbol_list(["601398", "601857"])
+stock_processor.set_stock_symbol_list(["600115"])
 
 def is_transaction_time():
     td = datetime.datetime.now()
@@ -81,7 +81,7 @@ while True:
     
     stock_symbol = stock_processor.get_one_stock()
     stock_processor.process_stock(stock_symbol)
-
+    time.sleep(180)
 #    commission_id = stock_processor.trade.buy_stock("601398", 4.20, 100)
 #    stock_processor.trade.cancel_commission(216527)
 #    print(commission_id)
