@@ -8,17 +8,8 @@ from gtja.stockprocessor import StockProcessor
 import time
 import datetime
 import configparser
-import stock_db.db_connection
 import logging
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.ERROR)
-fh = logging.FileHandler('stock.log', encoding="utf-8")
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-logger.addHandler(fh)
+import stock_db
 
 # read configuration
 config = configparser.ConfigParser()
@@ -26,6 +17,17 @@ config.read("gtja_trade.ini", encoding="utf-8")
 account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
 connection_string = config['Database'].get('connection')
+logging_filename = config['Logging'].get('filename')
+
+# logger setup
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.WARNING)
+fh = logging.FileHandler(logging_filename, encoding="utf-8")
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 # set the DB connection string
 stock_db.db_connection.default_connection_string = connection_string
@@ -44,7 +46,7 @@ stock_processor.set_stock_symbol_list(["600115"])
 def is_transaction_time():
     td = datetime.datetime.now()
     t1 = td.time()
-    t2 = datetime.time(9,0,0)
+    t2 = datetime.time(9,30,0)
     t3 = datetime.time(11,30,0)
     t4 = datetime.time(13,0,0)
     t5= datetime.time(15,0,0)
@@ -73,15 +75,17 @@ while True:
     if (is_market_closed()):
         print("market is closed!")
         break
-    
+      
     if (not is_transaction_time()):
         print("It's not transaction time now!")
-        time.sleep(180)
+        stock_processor.keep_alive()
+        time.sleep(60)
         continue
-    
+     
     stock_symbol = stock_processor.get_one_stock()
     stock_processor.process_stock(stock_symbol)
-    time.sleep(180)
+    time.sleep(60)
+    
 #    commission_id = stock_processor.trade.buy_stock("601398", 4.20, 100)
 #    stock_processor.trade.cancel_commission(216527)
 #    print(commission_id)
