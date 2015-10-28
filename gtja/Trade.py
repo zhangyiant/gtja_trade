@@ -252,6 +252,7 @@ class Trade:
         self.select_main_frame()
         element = self.driver.find_element_by_xpath(symbol_input_xpath)
         element.send_keys(symbol)
+        time.sleep(3)
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
         time.sleep(3)
@@ -325,8 +326,12 @@ class Trade:
         time.sleep(3)
         self.select_menu_frame()
         
+        time.sleep(3)
+        
         element = self.driver.find_element_by_xpath(current_commission_xpath)
         element.click()
+        
+        time.sleep(3)
         
         self.select_main_frame()
 
