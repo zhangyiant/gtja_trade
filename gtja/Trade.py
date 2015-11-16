@@ -358,8 +358,11 @@ class Trade:
             hour = int(datetime_string[8:10])
             minute = int(datetime_string[10:12])
             second = int(datetime_string[12:14])
-            current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
-
+            try:
+                current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
+            except:
+                print("Commission Info DateTime Error: {0}".format(datetime_string))
+                current_commission_info.datetime = datetime.now()
             current_commission_info.trade_volumn = int(column_elements[9].text)
             current_commission_info.trade_state = column_elements[10].text
             current_commission_list.append(current_commission_info)
