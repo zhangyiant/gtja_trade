@@ -382,7 +382,7 @@ class Trade:
         self.select_menu_frame()
         element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
         element.click()
-        time.sleep(3)
+        time.sleep(5)
         
         self.select_main_frame()
         element = self.driver.find_element_by_xpath(symbol_input_xpath)
