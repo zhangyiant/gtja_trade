@@ -255,7 +255,7 @@ class Trade:
         time.sleep(3)
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
-        time.sleep(3)
+        time.sleep(5)
         element = self.driver.find_element_by_xpath(price_xpath)
         price = float(element.text)
         
