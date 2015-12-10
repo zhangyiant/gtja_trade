@@ -76,7 +76,7 @@ class StockProcessor(object):
             else:
                 # Need to raise an error
                 return None
-        stock_price = self.trade.get_stock_price(symbol)
+        stock_price = 8.09
         
         total = cash_amount + quantity*stock_price
         
@@ -134,12 +134,12 @@ class StockProcessor(object):
         
         amount = int(suggested_amount/100) * 100
         
-        # we suppost we need 20 for transaction service fee, which is a big enough number
+        # we suppost we need 10 for transaction service fee, which is a big enough number
         # for normal transaction
         if (buy_or_sell == "Buy"):
-            cash_offset = -1 * (amount * stock_price + 20)
+            cash_offset = -1 * (amount * stock_price + 10)
         else:
-            cash_offset = amount * stock_price - 20
+            cash_offset = amount * stock_price - 10
              
         if (amount >= 100):
             debug_msg = "stock_symbol: {0}\nbuy_or_sell: {1}\namount: {2}\nstock_price: {3}".format(stock_symbol,

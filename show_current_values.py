@@ -26,9 +26,9 @@ stock_db.db_connection.default_connection_string = connection_string
 stock_processor = StockProcessor(account_name, password)
 print(account_name, password)
  
-stock_processor.login()
+#stock_processor.login()
  
-time.sleep(3)
+#time.sleep(3)
 
 symbol_list = ['600115']
 
