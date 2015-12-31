@@ -4,8 +4,12 @@ Created on Jul 8, 2015
 @author: yizhang
 '''
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoAlertPresentException
 import time
+import logging
 from datetime import datetime
 
 class CurrentCommissionInfo:
@@ -91,6 +95,7 @@ class Trade:
         '''
         Constructor
         '''
+        self.logger = logging.getLogger(__name__)
         self.username = username
         self.password = password
         self.driver = webdriver.Firefox()
@@ -214,6 +219,14 @@ class Trade:
         return
     
     def select_main_frame(self):
+        
+        # wait the main frame is ready
+        self.driver.switch_to.default_content()
+        element = WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it((By.NAME, "mainFrame"))
+            )
+        
+        # switch to the main frame
         self.driver.switch_to.default_content()
         main_frame = self.driver.find_element_by_name("mainFrame")
         self.driver.switch_to.frame(main_frame)
@@ -226,6 +239,13 @@ class Trade:
         return
     
     def select_left_frame(self):
+        # wait the main frame is ready
+        self.driver.switch_to.default_content()
+        element = WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it((By.NAME, "leftFrame"))
+            )
+        
+        # switch to left frame
         self.driver.switch_to.default_content()
         left_frame = self.driver.find_element_by_name("leftFrame")
         self.driver.switch_to.frame(left_frame)
@@ -233,8 +253,12 @@ class Trade:
     
     def select_menu_frame(self):
         self.select_left_frame()
-        menu_frame = self.driver.find_element_by_name("menuiframe")
-        self.driver.switch_to.frame(menu_frame)
+        
+        element = WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it((By.NAME, "menuiframe"))
+            )
+#         menu_frame = self.driver.find_element_by_name("menuiframe")
+#         self.driver.switch_to.frame(menu_frame)
         return
         
     def get_stock_price(self, symbol):
@@ -256,7 +280,16 @@ class Trade:
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
         time.sleep(3)
+        
+        # wait the price is not 0
+        WebDriverWait(self.driver, 10).until_not(
+            EC.text_to_be_present_in_element_value((By.XPATH, price_xpath), "0")
+            )
         element = self.driver.find_element_by_xpath(price_xpath)
+        
+        if element.text == "0":
+            self.logger.critical("Price is 0")
+
         price = float(element.text)
         
         return price
