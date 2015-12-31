@@ -2,3 +2,5 @@ account_info.csv
 .pydevproject
 .project
 gtja_trade.ini
+*~
+*.pyc
