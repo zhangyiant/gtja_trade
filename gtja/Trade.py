@@ -285,6 +285,7 @@ class Trade:
         WebDriverWait(self.driver, 10).until_not(
             EC.text_to_be_present_in_element_value((By.XPATH, price_xpath), "0")
             )
+
         element = self.driver.find_element_by_xpath(price_xpath)
         
         if element.text == "0":

@@ -4,3 +4,4 @@ account_info.csv
 gtja_trade.ini
 *~
 *.pyc
+**/__pycache__
