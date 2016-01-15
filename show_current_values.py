@@ -40,4 +40,4 @@ for symbol in symbol_list:
 
 stock_processor.close()
 
-# another test
+# another testqq
