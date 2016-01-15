@@ -23,6 +23,7 @@ stock_db.db_connection.default_connection_string = connection_string
 
 #commission_id = trade.get_last_commission_id("601398", 100)
 
+#test
 stock_processor = StockProcessor(account_name, password)
 print(account_name, password)
  
