@@ -39,3 +39,5 @@ for symbol in symbol_list:
     print("Stock symbol: {0}\t\tTotal Value: {1}".format(symbol, total))
 
 stock_processor.close()
+
+# another test
