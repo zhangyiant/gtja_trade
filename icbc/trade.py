@@ -14,11 +14,13 @@ class Trade:
         '''
         Constructor
         '''
-        pass
+        print("constructor")
+        return
     
     
     def login(self):
-        pass
+        print("login")
+        return
 
 if __name__ == '__main__':
     pass
