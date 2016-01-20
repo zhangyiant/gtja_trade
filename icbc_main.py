@@ -6,6 +6,7 @@ Created on 2016年1月18日
 from icbc.trade import Trade
 import logging
 import configparser
+import time
 
 # read configuration
 config = configparser.ConfigParser()
@@ -27,4 +28,8 @@ logger.addHandler(fh)
 if __name__ == '__main__':
     trade = Trade()
     trade.login()
+    trade.select_noble_metal()
+    noble_metal_price_list = trade.get_noble_metal_price_list()
+    for noble_metal_price in noble_metal_price_list:
+        print(noble_metal_price)
     trade.close()
