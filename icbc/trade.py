@@ -6,6 +6,7 @@ Created on 2016年1月17日
 import logging
 from selenium import webdriver
 import time
+import re
 
 class NobleMetalPrice:
     def __init__(self, 
@@ -48,6 +49,7 @@ class Trade:
         input("Please press Enter to continue!\n")
 
         # remove the 2 Ads after logging
+        '''
         self.switch_to_down_frame()
         e = self.driver.find_element_by_id("div_2")
         e = e.find_element_by_id("emall_closebtn")
@@ -57,7 +59,7 @@ class Trade:
         e = self.driver.find_element_by_id("div_3")
         e = e.find_element_by_id("emall_closebtn")
         e.click()
-
+        '''
         return
 
     def switch_to_top_frame(self):
@@ -99,6 +101,20 @@ class Trade:
         right_frame = self.driver.find_element_by_name("_right")
         self.driver.switch_to.frame(right_frame)
         return
+    
+    # confirm transaction frame
+    def switch_to_main_manage_p31_frame(self):
+        self.switch_to_main_frame()
+        manage_p31_frame = self.driver.find_element_by_name("manage_p31")
+        self.driver.switch_to.frame(manage_p31_frame)
+        return
+    
+    # transaction complete frame
+    def switch_to_main_manage_p32_frame(self):
+        self.switch_to_main_frame()
+        manage_p32_frame = self.driver.find_element_by_name("manage_p32")
+        self.driver.switch_to.frame(manage_p32_frame)
+        return
 
     def select_inventment(self):
         self.switch_to_top_frame()
@@ -108,6 +124,7 @@ class Trade:
 
     def select_noble_metal(self):
         self.select_inventment()
+        time.sleep(2)
         self.switch_to_top_frame()
         e = self.driver.find_element_by_id("headspan_LV2_16")
         e.click()
@@ -141,6 +158,110 @@ class Trade:
                                                 selling_price)
             noble_metal_price_list.append(noble_metal_price)
         return noble_metal_price_list
+
+    def buy_noble_metal(self, name, amount, price):
+        name_xpath = "tbody/tr/td[2]/select"
+        buy_radio_xpath = "tbody/tr[5]/td[2]/div[1]/input"
+        amount_xpath = "tbody/tr[9]/td[2]/input"
+        submit_xpath = "tbody/tr[16]/td[1]/a"
+        self.switch_to_main_right_frame()
+        main_table_element = self.driver.find_element_by_id("maintable")
+        name_element = \
+            main_table_element.find_element_by_xpath(name_xpath)
+        name_element.send_keys(name)
+        buy_radio_element = \
+            main_table_element.find_element_by_xpath(buy_radio_xpath)
+        buy_radio_element.click()
+        amount_element = \
+            main_table_element.find_element_by_xpath(amount_xpath)
+        amount_element.send_keys(str(amount))
+        submit_element = \
+            main_table_element.find_element_by_xpath(submit_xpath)
+        submit_element.click()
+        
+        submit_again_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
+        goback_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[2]"
+        total_price_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[7]/td[2]"
+        self.switch_to_main_manage_p31_frame()
+        total_price_element = self.driver.find_element_by_xpath(
+                                                    total_price_xpath)
+        print(total_price_element.text)
+        t = re.compile("\d+\.\d+")
+        m = t.match(total_price_element.text)
+        total_price = float(m.group())
+        if(total_price > amount * price):
+            goback_element = self.driver.find_element_by_xpath(goback_xpath)
+            goback_element.click()
+            return
+        submit_again_element = self.driver.find_element_by_xpath(
+                                                        submit_again_xpath)
+        submit_again_element.click()
+        
+        self.switch_to_main_manage_p32_frame()
+        complete_xpath = \
+            "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
+        complete_element = self.driver.find_element_by_xpath(complete_xpath)
+        result = complete_element.text
+        print(result)
+        if(result.find("已成交") != -1):
+            return True
+        else:
+            return False
+
+    def sell_noble_metal(self, name, amount, price):
+        name_xpath = "tbody/tr/td[2]/select"
+        sell_radio_xpath = "tbody/tr[5]/td[2]/div[2]/input"
+        amount_xpath = "tbody/tr[9]/td[2]/input"
+        submit_xpath = "tbody/tr[16]/td[1]/a"
+        self.switch_to_main_right_frame()
+        main_table_element = self.driver.find_element_by_id("maintable")
+        name_element = \
+            main_table_element.find_element_by_xpath(name_xpath)
+        name_element.send_keys(name)
+        buy_radio_element = \
+            main_table_element.find_element_by_xpath(sell_radio_xpath)
+        buy_radio_element.click()
+        amount_element = \
+            main_table_element.find_element_by_xpath(amount_xpath)
+        amount_element.send_keys(str(amount))
+        submit_element = \
+            main_table_element.find_element_by_xpath(submit_xpath)
+        submit_element.click()
+        
+        submit_again_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
+        goback_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[2]"
+        total_price_xpath = \
+            "/html/body/form[2]/table[2]/tbody/tr[7]/td[2]"
+        self.switch_to_main_manage_p31_frame()
+        total_price_element = self.driver.find_element_by_xpath(
+                                                    total_price_xpath)
+        print(total_price_element.text)
+        t = re.compile("\d+\.\d+")
+        m = t.match(total_price_element.text)
+        total_price = float(m.group())
+        if(total_price < amount * price):
+            goback_element = self.driver.find_element_by_xpath(goback_xpath)
+            goback_element.click()
+            return
+        submit_again_element = self.driver.find_element_by_xpath(
+                                                        submit_again_xpath)
+        submit_again_element.click()
+        
+        self.switch_to_main_manage_p32_frame()
+        complete_xpath = \
+            "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
+        complete_element = self.driver.find_element_by_xpath(complete_xpath)
+        result = complete_element.text
+        print(result)
+        if(result.find("已成交") != -1):
+            return True
+        else:
+            return False
 
     def close(self):
         self.driver.close()

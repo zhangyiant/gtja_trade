@@ -29,7 +29,10 @@ if __name__ == '__main__':
     trade = Trade()
     trade.login()
     trade.select_noble_metal()
-    noble_metal_price_list = trade.get_noble_metal_price_list()
-    for noble_metal_price in noble_metal_price_list:
-        print(noble_metal_price)
+    t = trade.buy_noble_metal("人民币账户白银", 1, 3)
+    print(t)
+    trade.select_noble_metal()
+    t = trade.sell_noble_metal("人民币账户白银", 1, 2)
+    print(t)
+    #time.sleep(10)
     trade.close()
