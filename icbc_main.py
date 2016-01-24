@@ -4,6 +4,7 @@ Created on 2016年1月18日
 @author: Wenwen
 '''
 from icbc.trade import Trade
+from icbc.processor import NobalMetalProcessor
 import logging
 import configparser
 import time
@@ -26,16 +27,22 @@ logger.addHandler(fh)
 
 
 if __name__ == '__main__':
-    trade = Trade()
-    trade.login()
-    trade.select_noble_metal()
+    nobal_metal_processor = NobalMetalProcessor()
+    nobal_metal_processor.login()
+
+    nobal_metal_processor.close()
+    
+    
+    #trade = Trade()
+    #trade.login()
+    #trade.select_noble_metal()
     #t = trade.buy_noble_metal("人民币账户白银", 1, 3)
     #print(t)
     #trade.select_noble_metal()
     #t = trade.sell_noble_metal("人民币账户白银", 1, 2)
     #print(t)
     
-    nobal_metal_price = trade.get_nobal_metal_price("人民币账户白银")
-    print(nobal_metal_price)
+    #nobal_metal_price = trade.get_nobal_metal_price("人民币账户白银")
+    #print(nobal_metal_price)
     #time.sleep(10)
-    trade.close()
+    #trade.close()
