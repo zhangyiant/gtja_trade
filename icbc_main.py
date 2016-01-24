@@ -28,8 +28,16 @@ logger.addHandler(fh)
 
 if __name__ == '__main__':
     nobal_metal_processor = NobalMetalProcessor()
+    nobal_metal_processor.set_nobal_metal_name_list(["人民币账户白银",
+                                                     "人民币账户黄金"])
     nobal_metal_processor.login()
-
+    t = 10
+    while True:
+        nobal_metal_name = nobal_metal_processor.get_one_nobal_metal()
+        nobal_metal_processor.process_nobal_metal(nobal_metal_name)
+        t = t - 1
+        if (t == 0):
+            break
     nobal_metal_processor.close()
     
     

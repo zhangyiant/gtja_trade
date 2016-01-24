@@ -40,11 +40,11 @@ class StockProcessor(object):
     def close(self):
         self.trade.close()
         return
-      
+
     def set_stock_symbol_list(self, stock_symbol_list):
         self.stock_symbol_list =stock_symbol_list
         return
-    
+
     def get_stock_symbol_list(self):
         return self.stock_symbol_list
     
