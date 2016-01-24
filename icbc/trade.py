@@ -143,21 +143,25 @@ class Trade:
                 "tbody/tr/td/table[2]/tbody/tr[{0}]/td[4]/a/span".format(i+2)
             e = main_transaction_area_element.find_element_by_xpath(
                                                                 name_xpath)
-            print(e.text)
             name = e.text
             e = main_transaction_area_element.find_element_by_xpath(
                                                         buying_price_xpath)
-            print(e.text)
             buying_price = float(e.text)
             e = main_transaction_area_element.find_element_by_xpath(
                                                         selling_price_xpath)
-            print(e.text)
             selling_price = float(e.text)
             noble_metal_price = NobleMetalPrice(name, 
                                                 buying_price, 
                                                 selling_price)
             noble_metal_price_list.append(noble_metal_price)
         return noble_metal_price_list
+
+    def get_nobal_metal_price(self,name):
+        nobal_metal_price_list = self.get_noble_metal_price_list()
+        for nobal_metal_price in nobal_metal_price_list:
+            if nobal_metal_price.name == name:
+                return nobal_metal_price
+        return None
 
     def buy_noble_metal(self, name, amount, price):
         name_xpath = "tbody/tr/td[2]/select"
