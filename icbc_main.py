@@ -15,7 +15,7 @@ config.read("gtja_trade.ini", encoding="utf-8")
 account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
 connection_string = config['Database'].get('connection')
-logging_filename = "icbc.log"
+logging_filename = config['Logging'].get('filename')
 
 # logger setup
 logger = logging.getLogger()

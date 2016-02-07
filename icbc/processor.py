@@ -44,4 +44,11 @@ class NobalMetalProcessor:
         self.trade.select_noble_metal()
         nobal_metal_price = self.trade.get_nobal_metal_price(nobal_metal_name)
         print("price: {0}".format(nobal_metal_price))
+        
+        # how many to buy or sell for this nobal metal
+        # Todo:
+        
+        # Buy or sell them
+        # Todo:
+
         return
