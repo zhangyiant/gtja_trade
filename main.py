@@ -41,7 +41,7 @@ stock_processor.login()
  
 time.sleep(3)
 
-stock_processor.set_stock_symbol_list(["600115"])
+stock_processor.set_stock_symbol_list(["600115", "601390"])
 
 def is_transaction_time():
     td = datetime.datetime.now()
@@ -74,7 +74,7 @@ while True:
 
     t = datetime.datetime.now()
     print(t)
-    
+
     # check time
     if (is_market_closed()):
         print("market is closed!")
