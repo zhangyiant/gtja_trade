@@ -328,30 +328,36 @@ class Trade:
         for row_element in row_elements[1:-1]:
             column_elements = row_element.find_elements_by_tag_name("td")
             row_commission_id = int(column_elements[2].text)
+            row_commission_state = column_elements[10].text
             if (row_commission_id == commission_id):
                 # we find the row
                 found = True
                 break
         
+        result = 0
         if found:
-            operation_element = column_elements[0]
-            cancel_element = operation_element.find_element_by_tag_name("a")
-            cancel_element.click()
-            if (self.is_alert_present()):
-                alert = self.driver.switch_to.alert
-                print(alert.text)
-                alert.accept()
+            if row_commission_state == "已成" or \
+                    row_commission_state == "废单":
+                result = 0
+            else:
+                operation_element = column_elements[0]
+                cancel_element = \
+                    operation_element.find_element_by_tag_name("a")
+                cancel_element.click()
                 if (self.is_alert_present()):
                     alert = self.driver.switch_to.alert
                     print(alert.text)
                     alert.accept()
-            return 1
+                    if (self.is_alert_present()):
+                        alert = self.driver.switch_to.alert
+                        print(alert.text)
+                        alert.accept()
+                result = 1
         else:
             print("Error, cannot find the element to cancel!")
-            return 0 
 
-        return
-            
+        return result
+
     def get_current_commission_list(self):
         current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
         current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
