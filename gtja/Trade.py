@@ -99,6 +99,7 @@ class Trade:
         self.username = username
         self.password = password
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(10)
         return
 
     def is_alert_present(self):
