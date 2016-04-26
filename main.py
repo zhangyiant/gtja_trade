@@ -3,77 +3,82 @@ Created on Jul 8, 2015
 
 @author: Yi Zhang
 '''
-from gtja.stockprocessor import StockProcessor
-
 import time
 import datetime
 import configparser
 import logging
+
+from gtja.stockprocessor import StockProcessor
+
 import stock_db
 
 # read configuration
 CONFIG_PARSER = configparser.ConfigParser()
 CONFIG_PARSER.read("gtja_trade.ini", encoding="utf-8")
-account_name = CONFIG_PARSER['Account'].get('account_name')
-password = CONFIG_PARSER['Account'].get('password')
-connection_string = CONFIG_PARSER['Database'].get('connection')
-logging_filename = CONFIG_PARSER['Logging'].get('filename')
+ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
+PASSWORD = CONFIG_PARSER['Account'].get('password')
+CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
+LOGGING_FILENAME = CONFIG_PARSER['Logging'].get('filename')
 
 # logger setup
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.DEBUG)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.WARNING)
-fh = logging.FileHandler(logging_filename, encoding="utf-8")
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-logger.addHandler(fh)
+FH = logging.FileHandler(LOGGING_FILENAME, encoding="utf-8")
+FORMATTER = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+FH.setFormatter(FORMATTER)
+LOGGER.addHandler(FH)
 
 # set the DB connection string
-stock_db.db_connection.default_connection_string = connection_string
+stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 #commission_id = trade.get_last_commission_id("601398", 100)
 
-stock_processor = StockProcessor(account_name, password)
-print(account_name, password)
+STOCK_PROCESSOR = StockProcessor(ACCOUNT_NAME, PASSWORD)
+print(ACCOUNT_NAME, PASSWORD)
 
-stock_processor.login()
+STOCK_PROCESSOR.login()
 
 time.sleep(3)
 
-stock_processor.set_stock_symbol_list(["600115", "601390"])
+STOCK_PROCESSOR.set_stock_symbol_list(["600115", "601390"])
 
 def is_transaction_time():
-    td = datetime.datetime.now()
-    t1 = td.time()
-    t2 = datetime.time(9, 30, 0)
-    t3 = datetime.time(11, 30, 0)
-    t4 = datetime.time(13, 0, 0)
-    t5 = datetime.time(15, 0, 0)
-    if t1 < t2:
+    '''
+        is_transaction_time
+    '''
+    time_now = datetime.datetime.now()
+    time_1 = time_now.time()
+    time_2 = datetime.time(9, 30, 0)
+    time_3 = datetime.time(11, 30, 0)
+    time_4 = datetime.time(13, 0, 0)
+    time_5 = datetime.time(15, 0, 0)
+    if time_1 < time_2:
         return False
-    if t1 >= t2 and t1 <= t3:
+    if time_1 >= time_2 and time_1 <= time_3:
         return True
-    if t1 > t3 and t1 < t4:
+    if time_1 > time_3 and time_1 < time_4:
         return False
-    if t1 >= t4 and t1 <= t5:
+    if time_1 >= time_4 and time_1 <= time_5:
         return True
-    if t1 > t5:
+    if time_1 > time_5:
         return False
 
 def is_market_closed():
-    td = datetime.datetime.now()
-    t1 = td.time()
-    t2 = datetime.time(15, 0, 0)
-    if t1 > t2:
-        return True
-    else:
-        return False
+    '''
+        is_market_close
+    '''
+    time_now = datetime.datetime.now()
+    time_1 = time_now.time()
+    time_2 = datetime.time(15, 0, 0)
+
+    return bool(time_1 > time_2)
 
 while True:
 
-    t = datetime.datetime.now()
-    print(t)
+    T = datetime.datetime.now()
+    print(T)
 
     # check time
     if is_market_closed():
@@ -82,19 +87,19 @@ while True:
 
     if not is_transaction_time():
         print("It's not transaction time now!")
-        stock_processor.keep_alive()
+        STOCK_PROCESSOR.keep_alive()
         time.sleep(60)
         continue
 
-    stock_symbol = stock_processor.get_one_stock()
-    stock_processor.process_stock(stock_symbol)
+    STOCK_SYMBOL = STOCK_PROCESSOR.get_one_stock()
+    STOCK_PROCESSOR.process_stock(STOCK_SYMBOL)
     time.sleep(59)
 
-#    commission_id = stock_processor.trade.buy_stock("601398", 4.20, 100)
-#    stock_processor.trade.cancel_commission(216527)
+#    commission_id = STOCK_PROCESSOR.trade.buy_stock("601398", 4.20, 100)
+#    STOCK_PROCESSOR.trade.cancel_commission(216527)
 #    print(commission_id)
 
 #commission_id = trade.sell_stock("601398", 5.12, 200)
 
 
-stock_processor.close()
+STOCK_PROCESSOR.close()
