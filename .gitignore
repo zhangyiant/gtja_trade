@@ -5,3 +5,7 @@ gtja_trade.ini
 *~
 *.pyc
 **/__pycache__
+**/#*#
+GPATH
+GRTAGS
+GTAGS
