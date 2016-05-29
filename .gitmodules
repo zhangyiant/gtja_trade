@@ -1,0 +1,3 @@
+[submodule "lib/stock"]
+	path = lib/stock
+	url = https://github.com/zhangyiant/stock.git
