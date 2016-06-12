@@ -67,25 +67,41 @@ class NobalMetalProcessor:
         owned_quantity = NobalMetalProcessor.\
                          get_owned_nobal_metal_quantity(nobal_metal_name)
 
+        # buy
+        buying_price = nobal_metal_price.buying_price
         alogrithm = SimpleAlgorithm(symbol=nobal_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
-                                    current_price=nobal_metal_price)
+                                    current_price=buying_price)
 
         alogrithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
-        if buy_or_sell is None:
-            print("Nothing to do")
+        if (buy_or_sell is not None) and (buy_or_sell == "Buy"):
+            amount = algorithm.get_suggested_amount()
+            result = self.trade.buy_noble_metal(nobal_metal_name,
+                                                amount,
+                                                nobal_metal_price)
+            # todo: update DB
             return
 
-        amount = algorithm.get_suggested_amount()
+        # sell
+        selling_price = nobal_metal_price.selling_price
+        alogrithm = SimpleAlgorithm(symbol=nobal_metal_name,
+                                    start_price=price_low  ,
+                                    stop_price=price_high,
+                                    current_price=selling_price)
 
-        if buy_or_sell == "Buy":
-            # buy nobal metal
-            pass
-        else:
-            # check if we need to sell some, sell some if needed
-            pass
+        alogrithm.calculate()
+
+        buy_or_sell = algorithm.get_suggested_buy_or_sell()
+        if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
+            amount = algorithm.get_suggested_amount()
+            # todo: need to check if the really quantity to sell
+            result = self.trade.sell_noble_metal(nobal_metal_name,
+                                                amount,
+                                                nobal_metal_price)
+            # todo: update DB
+            return
 
         return
