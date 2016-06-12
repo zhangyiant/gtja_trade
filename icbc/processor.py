@@ -7,7 +7,7 @@ from .trade import Trade
 from stock_db.db_stock import \
     StockCashTable, \
     StockTransactionTable, \
-    StockPriceRangeTable
+    StockPriceRangeTable, \
 from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
 from .utility import \
     complet_buy_transaction, \
