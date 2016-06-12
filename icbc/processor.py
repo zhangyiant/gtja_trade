@@ -75,13 +75,17 @@ class NobalMetalProcessor:
         alogrithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
+        if buy_or_sell is None:
+            print("Nothing to do")
+            return
+
         amount = algorithm.get_suggested_amount()
 
-        
-        # how many to buy or sell for this nobal metal
-        # Todo:
-        
-        # Buy or sell them
-        # Todo:
+        if buy_or_sell == "Buy":
+            # buy nobal metal
+            pass
+        else:
+            # check if we need to sell some, sell some if needed
+            pass
 
         return
