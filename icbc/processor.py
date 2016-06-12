@@ -9,7 +9,9 @@ from stock_db.db_stock import \
     StockTransactionTable, \
     StockPriceRangeTable
 from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
-
+from .utility import \
+    complet_buy_transaction, \
+    complete_sell_transaction
 
 class NobalMetalProcessor:
     '''
@@ -81,8 +83,11 @@ class NobalMetalProcessor:
             amount = algorithm.get_suggested_amount()
             result = self.trade.buy_noble_metal(nobal_metal_name,
                                                 amount,
-                                                nobal_metal_price)
-            # todo: update DB
+                                                buying_price)
+            if result:
+                complete_buy_transaction(nobal_metal_name,
+                                         buying_price,
+                                         amount)
             return
 
         # sell
@@ -97,11 +102,18 @@ class NobalMetalProcessor:
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
             amount = algorithm.get_suggested_amount()
-            # todo: need to check if the really quantity to sell
+            quantity = StockTransaction.\
+                       get_lowest_buy_price_quantity(nobal_metal_name)
+            if amount >= quantity:
+                amount = quantity
+
             result = self.trade.sell_noble_metal(nobal_metal_name,
-                                                amount,
-                                                nobal_metal_price)
-            # todo: update DB
+                                                 amount,
+                                                 selling_price)
+            if result:
+                complete_sell_transaction(nobal_metal_name,
+                                          selling_price,
+                                          amount)
             return
 
         return
