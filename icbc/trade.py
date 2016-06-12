@@ -251,7 +251,7 @@ class Trade:
         if(total_price < amount * price):
             goback_element = self.driver.find_element_by_xpath(goback_xpath)
             goback_element.click()
-            return
+            return False
         submit_again_element = self.driver.find_element_by_xpath(
                                                         submit_again_xpath)
         submit_again_element.click()
