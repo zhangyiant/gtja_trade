@@ -150,8 +150,8 @@ class Trade:
             e = main_transaction_area_element.find_element_by_xpath(
                                                         selling_price_xpath)
             selling_price = float(e.text)
-            noble_metal_price = NobleMetalPrice(name, 
-                                                buying_price, 
+            noble_metal_price = NobleMetalPrice(name,
+                                                buying_price,
                                                 selling_price)
             noble_metal_price_list.append(noble_metal_price)
         return noble_metal_price_list
@@ -182,7 +182,7 @@ class Trade:
         submit_element = \
             main_table_element.find_element_by_xpath(submit_xpath)
         submit_element.click()
-        
+
         submit_again_xpath = \
             "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
         goback_xpath = \
@@ -199,11 +199,11 @@ class Trade:
         if(total_price > amount * price):
             goback_element = self.driver.find_element_by_xpath(goback_xpath)
             goback_element.click()
-            return
+            return False
         submit_again_element = self.driver.find_element_by_xpath(
                                                         submit_again_xpath)
         submit_again_element.click()
-        
+
         self.switch_to_main_manage_p32_frame()
         complete_xpath = \
             "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
@@ -234,7 +234,7 @@ class Trade:
         submit_element = \
             main_table_element.find_element_by_xpath(submit_xpath)
         submit_element.click()
-        
+
         submit_again_xpath = \
             "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
         goback_xpath = \
@@ -255,7 +255,7 @@ class Trade:
         submit_again_element = self.driver.find_element_by_xpath(
                                                         submit_again_xpath)
         submit_again_element.click()
-        
+
         self.switch_to_main_manage_p32_frame()
         complete_xpath = \
             "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
@@ -273,4 +273,3 @@ class Trade:
 
 if __name__ == '__main__':
     pass
-    
