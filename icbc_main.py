@@ -36,9 +36,7 @@ if __name__ == '__main__':
     while True:
         nobal_metal_name = nobal_metal_processor.get_one_nobal_metal()
         nobal_metal_processor.process_nobal_metal(nobal_metal_name)
-        t = t - 1
-        if (t == 0):
-            break
+
     nobal_metal_processor.close()
     
     
