@@ -116,14 +116,15 @@ class Trade:
         self.driver.switch_to.frame(manage_p32_frame)
         return
 
-    def select_inventment(self):
+    def select_investment(self):
         self.switch_to_top_frame()
         e = self.driver.find_element_by_id("headspan_LV1_99")
         e.click()
+        print("investment should be clicked")
         return
 
     def select_noble_metal(self):
-        self.select_inventment()
+        self.select_investment()
         time.sleep(2)
         self.switch_to_top_frame()
         e = self.driver.find_element_by_id("headspan_LV2_16")
@@ -193,13 +194,22 @@ class Trade:
         total_price_element = self.driver.find_element_by_xpath(
                                                     total_price_xpath)
         print(total_price_element.text)
-        t = re.compile("\d+\.\d+")
+        t = re.compile("(\d+,)*\d+\.\d+")
         m = t.match(total_price_element.text)
-        total_price = float(m.group())
+        total_price_string = m.group()
+        total_price_string = total_price_string.replace(",", "")
+        total_price = float(total_price_string)
+        print(total_price)
+        print(amount * price)
         if(total_price > amount * price):
             goback_element = self.driver.find_element_by_xpath(goback_xpath)
             goback_element.click()
             return False
+        #else:
+        #    goback_element = self.driver.find_element_by_xpath(goback_xpath)
+        #    goback_element.click()
+        #    return True
+
         submit_again_element = self.driver.find_element_by_xpath(
                                                         submit_again_xpath)
         submit_again_element.click()
@@ -245,13 +255,20 @@ class Trade:
         total_price_element = self.driver.find_element_by_xpath(
                                                     total_price_xpath)
         print(total_price_element.text)
-        t = re.compile("\d+\.\d+")
+        t = re.compile("(\d+,)*\d+\.\d+")
         m = t.match(total_price_element.text)
-        total_price = float(m.group())
+        total_price_string = m.group()
+        total_price_string = total_price_string.replace(",", "")
+        total_price = float(total_price_string)
         if(total_price < amount * price):
             goback_element = self.driver.find_element_by_xpath(goback_xpath)
             goback_element.click()
             return False
+        #else:
+        #    goback_element = self.driver.find_element_by_xpath(goback_xpath)
+        #    goback_element.click()
+        #    return True
+
         submit_again_element = self.driver.find_element_by_xpath(
                                                         submit_again_xpath)
         submit_again_element.click()

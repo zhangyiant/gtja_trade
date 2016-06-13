@@ -3,18 +3,19 @@ Created on 2016年1月18日
 
 @author: Wenwen
 '''
-from icbc.trade import Trade
-from icbc.processor import NobalMetalProcessor
 import logging
 import configparser
 import time
+from icbc.trade import Trade
+from icbc.processor import NobalMetalProcessor
+import stock_db
 
 # read configuration
 config = configparser.ConfigParser()
 config.read("gtja_trade.ini", encoding="utf-8")
 account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
-connection_string = config['Database'].get('connection')
+CONNECTION_STRING = config['Database'].get('connection')
 logging_filename = config['Logging'].get('filename')
 
 # logger setup
@@ -25,11 +26,11 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 
+stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 if __name__ == '__main__':
     nobal_metal_processor = NobalMetalProcessor()
-    nobal_metal_processor.set_nobal_metal_name_list(["人民币账户白银",
-                                                     "人民币账户黄金"])
+    nobal_metal_processor.set_nobal_metal_name_list(["人民币账户白银"])
     nobal_metal_processor.login()
     t = 10
     while True:

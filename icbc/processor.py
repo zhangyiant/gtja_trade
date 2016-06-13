@@ -6,11 +6,12 @@ Created on 2016年1月24日
 from .trade import Trade
 from stock_db.db_stock import \
     StockCashTable, \
+    StockTransaction, \
     StockTransactionTable, \
-    StockPriceRangeTable, \
+    StockPriceRangeTable
 from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
 from .utility import \
-    complet_buy_transaction, \
+    complete_buy_transaction, \
     complete_sell_transaction
 
 class NobalMetalProcessor:
@@ -66,53 +67,63 @@ class NobalMetalProcessor:
         stock_cash_table = StockCashTable()
         nobal_metal_cash = stock_cash_table.\
                            get_stock_cash_by_symbol(nobal_metal_name)
-        owned_quantity = NobalMetalProcessor.\
-                         get_owned_nobal_metal_quantity(nobal_metal_name)
+        owned_quantity = StockTransaction.\
+                         get_owned_quantity(nobal_metal_name)
 
         # buy
-        buying_price = nobal_metal_price.buying_price
-        alogrithm = SimpleAlgorithm(symbol=nobal_metal_name,
+        buy_price = nobal_metal_price.selling_price
+        algorithm = SimpleAlgorithm(symbol=nobal_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
-                                    current_price=buying_price)
+                                    current_price=buy_price)
 
-        alogrithm.calculate()
+        algorithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Buy"):
             amount = algorithm.get_suggested_amount()
+            print("buy {0}, price: {1}, amount: {2}".\
+                  format(nobal_metal_name, buy_price, amount))
             result = self.trade.buy_noble_metal(nobal_metal_name,
                                                 amount,
-                                                buying_price)
+                                                buy_price)
+            print(result)
             if result:
+                print("update db")
                 complete_buy_transaction(nobal_metal_name,
-                                         buying_price,
+                                         buy_price,
                                          amount)
             return
 
         # sell
-        selling_price = nobal_metal_price.selling_price
+        sell_price = nobal_metal_price.buying_price
         alogrithm = SimpleAlgorithm(symbol=nobal_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
-                                    current_price=selling_price)
+                                    current_price=sell_price)
 
         alogrithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
+            lowest_price = StockTransaction.\
+                           get_lowest_buy_price(nobal_metal_name)
+            if sell_price - lowest_price < 0.1:
+                return
             amount = algorithm.get_suggested_amount()
             quantity = StockTransaction.\
                        get_lowest_buy_price_quantity(nobal_metal_name)
             if amount >= quantity:
                 amount = quantity
 
+            print("sell {0}, price: {1}, amount: {2}".\
+                  format(nobal_metal_name, sell_price, amount))
             result = self.trade.sell_noble_metal(nobal_metal_name,
                                                  amount,
-                                                 selling_price)
+                                                 sell_price)
             if result:
                 complete_sell_transaction(nobal_metal_name,
-                                          selling_price,
+                                          sell_price,
                                           amount)
             return
 

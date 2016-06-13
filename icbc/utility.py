@@ -7,9 +7,9 @@ from stock_db.db_stock import \
     StockTransaction, \
     StockClosedTransaction
 from stock_db.db_connection import get_default_db_connection
-from sqalchemy import asc
+from sqlalchemy import asc
 
-def complet_buy_transaction(symbol, price, quantity, conn=None):
+def complete_buy_transaction(symbol, price, quantity, conn=None):
     '''
         update DB after buy transaction
     '''
@@ -19,7 +19,9 @@ def complet_buy_transaction(symbol, price, quantity, conn=None):
 
     total_amount = price * quantity
 
-    stock_cash = session.query(StockCash.symbol == symbol).one_or_none()
+    stock_cash = session.query(StockCash).\
+                 filter(StockCash.symbol == symbol).\
+                 one_or_none()
     if stock_cash is None:
         session.close()
         raise Exception("Save buy transaction failed")
@@ -49,7 +51,9 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
 
     total_amount = price * quantity
 
-    stock_cash = session.query(StockCash.symbol == symbol).one_or_none()
+    stock_cash = session.query(StockCash).\
+                 filter(StockCash.symbol == symbol).\
+                 one_or_none()
     if stock_cash is None:
         session.close()
         raise Exception("Save sell transaction failed")
@@ -69,6 +73,10 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
     if stock_transaction.quantity < quantity:
         session.close()
         raise Exception("stock_transaction.quantity < quantity")
+
+    if stock_transaction.price < price:
+        session.close()
+        raise Exception("stock_tranaction price < sell_price")
 
     stock_closed_transaction = StockClosedTransaction(
         symbol=symbol,
