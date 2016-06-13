@@ -1,3 +1,4 @@
+
 '''
 Created on 2015年8月24日
 
@@ -190,6 +191,10 @@ class StockProcessor(object):
                         stock_price)
                     self.update_cash_table(stock_symbol, cash_offset)
             elif (buy_or_sell == "Sell"):
+                lowest_buy_price = StockTransaction.\
+                                   get_lowest_buy_price(stock_symbol)
+                if stock_price - lowest_buy_price < 0.3:
+                    return
                 commission_id = self.trade.sell_stock(
                     stock_symbol,
                     stock_price,
