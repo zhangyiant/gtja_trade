@@ -92,14 +92,6 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
     else:
         stock_transaction.quantity = stock_transaction.quantity - quantity
 
-    stock_transaction = StockTransaction()
-    stock_transaction.symbol = symbol
-    stock_transaction.buy_or_sell = "Buy"
-    stock_transaction.quantity = quantity
-    stock_transaction.price = price
-    stock_transaction.date = datetime.now()
-
-    session.add(stock_transaction)
     session.commit()
 
     session.close()
