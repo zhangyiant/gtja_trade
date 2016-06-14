@@ -53,7 +53,8 @@ class StockProcessor(object):
         return self.stock_symbol_list
 
     def keep_alive(self):
-        self.trade.enter_stock_menu()
+        #self.trade.enter_stock_menu()
+        self.trade.get_current_commission_list()
         return
 
     def get_one_stock(self):
