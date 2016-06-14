@@ -10,6 +10,9 @@ from stock_db.db_stock import StockPriceRangeTable
 from stock_db.db_stock import StockPriceRange
 from stock_db.db_stock import StockTransactionTable
 from stock_db.db_stock import StockTransaction
+from .utility import \
+    complete_buy_transaction, \
+    complete_sell_transaction
 import datetime
 import time
 import logging
@@ -174,27 +177,29 @@ class StockProcessor(object):
                         commission_state = self.trade.get_commission_state(
                                                                 commission_id)
                         if (commission_state == "已成"):
-                            self.add_transaction(stock_symbol,
-                                                 buy_or_sell,
-                                                 amount,
-                                                 stock_price)
-                            self.update_cash_table(stock_symbol, cash_offset)
+                            complete_buy_transaction(stock_symbol,
+                                                     stock_price,
+                                                     amount,
+                                                     cash_offset)
                         else:
                             print("Unknown error in canceling transaction")
                             self.logger.debug(
                                 "Unknown error in canceling transaction.")
                 else:
-                    self.add_transaction(
-                        stock_symbol,
-                        buy_or_sell,
-                        amount,
-                        stock_price)
-                    self.update_cash_table(stock_symbol, cash_offset)
+                    complete_buy_transaction(stock_symbol,
+                                             stock_price,
+                                             amount,
+                                             cash_offset)
             elif (buy_or_sell == "Sell"):
                 lowest_buy_price = StockTransaction.\
                                    get_lowest_buy_price(stock_symbol)
+                lowest_buy_price_quantity = StockTransaction.\
+                                            get_lowest_buy_price_quantity(
+                                                stock_symbol)
                 if stock_price - lowest_buy_price < 0.3:
                     return
+                if amount > lowest_buy_price_quantity:
+                    amount = lowest_buy_price_quantity
                 commission_id = self.trade.sell_stock(
                     stock_symbol,
                     stock_price,
@@ -208,23 +213,19 @@ class StockProcessor(object):
                         commission_state = self.trade.get_commission_state(
                             commission_id)
                         if (commission_state == "已成"):
-                            self.add_transaction(
-                                stock_symbol,
-                                buy_or_sell,
-                                amount,
-                                stock_price)
-                            self.update_cash_table(stock_symbol, cash_offset)
+                            complete_sell_transaction(stock_symbol,
+                                                      stock_price,
+                                                      amount,
+                                                      cash_offset)
                         else:
                             print("Unknown error in canceling transaction")
                             self.logger.debug(
                                 "Unknown error in canceling transaction.")
                 else:
-                    self.add_transaction(
-                        stock_symbol,
-                        buy_or_sell,
-                        amount,
-                        stock_price)
-                    self.update_cash_table(stock_symbol, cash_offset)
+                    complete_sell_transaction(stock_symbol,
+                                              stock_price,
+                                              amount,
+                                              cash_offset)
             else:
                 print("Error!")
 

@@ -9,15 +9,13 @@ from stock_db.db_stock import \
 from stock_db.db_connection import get_default_db_connection
 from sqlalchemy import asc
 
-def complete_buy_transaction(symbol, price, quantity, conn=None):
+def complete_buy_transaction(symbol, price, quantity, cash_offset, conn=None):
     '''
         update DB after buy transaction
     '''
     if conn is None:
         conn = get_default_db_connection()
     session = conn.get_sessionmake()()
-
-    total_amount = price * quantity
 
     stock_cash = session.query(StockCash).\
                  filter(StockCash.symbol == symbol).\
@@ -26,7 +24,7 @@ def complete_buy_transaction(symbol, price, quantity, conn=None):
         session.close()
         raise Exception("Save buy transaction failed")
 
-    stock_cash.amount = stock_cash.amount - total_amount
+    stock_cash.amount = stock_cash.amount + cash_offset
 
     stock_transaction = StockTransaction()
     stock_transaction.symbol = symbol
@@ -41,15 +39,13 @@ def complete_buy_transaction(symbol, price, quantity, conn=None):
     session.close()
     return
 
-def complete_sell_transaction(symbol, price, quantity, conn=None):
+def complete_sell_transaction(symbol, price, quantity, cash_offset, conn=None):
     '''
         update DB after sell transaction
     '''
     if conn is None:
         conn = get_default_db_connection()
     session = conn.get_sessionmake()()
-
-    total_amount = price * quantity
 
     stock_cash = session.query(StockCash).\
                  filter(StockCash.symbol == symbol).\
@@ -58,7 +54,7 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
         session.close()
         raise Exception("Save sell transaction failed")
 
-    stock_cash.amount = stock_cash.amount + total_amount
+    stock_cash.amount = stock_cash.amount + cash_offset
 
     # get lowest buy transaction
     stock_transaction = session.query(StockTransaction).\
@@ -92,14 +88,6 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
     else:
         stock_transaction.quantity = stock_transaction.quantity - quantity
 
-    stock_transaction = StockTransaction()
-    stock_transaction.symbol = symbol
-    stock_transaction.buy_or_sell = "Buy"
-    stock_transaction.quantity = quantity
-    stock_transaction.price = price
-    stock_transaction.date = datetime.now()
-
-    session.add(stock_transaction)
     session.commit()
 
     session.close()
