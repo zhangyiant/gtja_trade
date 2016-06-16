@@ -74,7 +74,7 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
         session.close()
         raise Exception("stock_transaction.quantity < quantity")
 
-    if stock_transaction.price < price:
+    if stock_transaction.price > price:
         session.close()
         raise Exception("stock_tranaction price < sell_price")
 

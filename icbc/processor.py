@@ -108,7 +108,7 @@ class NobalMetalProcessor:
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
             lowest_price = StockTransaction.\
                            get_lowest_buy_price(nobal_metal_name)
-            if sell_price - lowest_price < 0.1:
+            if sell_price - lowest_price < 0.04:
                 return
             amount = algorithm.get_suggested_amount()
             quantity = StockTransaction.\
