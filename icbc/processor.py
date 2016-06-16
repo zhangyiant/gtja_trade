@@ -97,12 +97,12 @@ class NobalMetalProcessor:
 
         # sell
         sell_price = nobal_metal_price.buying_price
-        alogrithm = SimpleAlgorithm(symbol=nobal_metal_name,
+        algorithm = SimpleAlgorithm(symbol=nobal_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
                                     current_price=sell_price)
 
-        alogrithm.calculate()
+        algorithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
