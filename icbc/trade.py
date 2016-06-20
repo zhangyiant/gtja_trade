@@ -137,11 +137,11 @@ class Trade:
         # tbody/tr/td/table[1]/tbody/tr[1]/td[0]
         noble_metal_price_list = []
         for i in range(8):
-            name_xpath = "tbody/tr/td/table[2]/tbody/tr[{0}]/td[1]".format(i+2)
+            name_xpath = "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[1]".format(i+2)
             buying_price_xpath = \
-                "tbody/tr/td/table[2]/tbody/tr[{0}]/td[3]/a/span".format(i+2)
+                "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[3]/a/span".format(i+2)
             selling_price_xpath = \
-                "tbody/tr/td/table[2]/tbody/tr[{0}]/td[4]/a/span".format(i+2)
+                "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[4]/a/span".format(i+2)
             e = main_transaction_area_element.find_element_by_xpath(
                                                                 name_xpath)
             name = e.text

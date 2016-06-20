@@ -10,6 +10,7 @@ from icbc.trade import Trade
 from icbc.processor import NobalMetalProcessor
 import stock_db
 
+# Monday 7:00 - Saturday 4:00
 # read configuration
 config = configparser.ConfigParser()
 config.read("gtja_trade.ini", encoding="utf-8")
