@@ -121,6 +121,7 @@ class NobalMetalProcessor:
             result = self.trade.sell_noble_metal(nobal_metal_name,
                                                  amount,
                                                  sell_price)
+            print(result)
             if result:
                 complete_sell_transaction(nobal_metal_name,
                                           sell_price,

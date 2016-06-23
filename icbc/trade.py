@@ -105,14 +105,14 @@ class Trade:
     # confirm transaction frame
     def switch_to_main_manage_p31_frame(self):
         self.switch_to_main_frame()
-        manage_p31_frame = self.driver.find_element_by_name("manage_p31")
+        manage_p31_frame = self.driver.find_element_by_name("_right")
         self.driver.switch_to.frame(manage_p31_frame)
         return
     
     # transaction complete frame
     def switch_to_main_manage_p32_frame(self):
         self.switch_to_main_frame()
-        manage_p32_frame = self.driver.find_element_by_name("manage_p32")
+        manage_p32_frame = self.driver.find_element_by_name("_right")
         self.driver.switch_to.frame(manage_p32_frame)
         return
 
@@ -168,7 +168,7 @@ class Trade:
         name_xpath = "tbody/tr/td[2]/select"
         buy_radio_xpath = "tbody/tr[5]/td[2]/div[1]/input"
         amount_xpath = "tbody/tr[9]/td[2]/input"
-        submit_xpath = "tbody/tr[16]/td[1]/a"
+        submit_xpath = "tbody/tr[18]/td[1]/a"
         self.switch_to_main_right_frame()
         main_table_element = self.driver.find_element_by_id("maintable")
         name_element = \
@@ -185,11 +185,11 @@ class Trade:
         submit_element.click()
 
         submit_again_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[1]"
         goback_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[2]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
         total_price_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[7]/td[2]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
         self.switch_to_main_manage_p31_frame()
         total_price_element = self.driver.find_element_by_xpath(
                                                     total_price_xpath)
@@ -216,11 +216,11 @@ class Trade:
 
         self.switch_to_main_manage_p32_frame()
         complete_xpath = \
-            "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
+            "/html/body/table[2]/tbody/tr/td/div/div[2]/h4/b"
         complete_element = self.driver.find_element_by_xpath(complete_xpath)
         result = complete_element.text
         print(result)
-        if(result.find("已成交") != -1):
+        if(result.find("交易成功") != -1):
             return True
         else:
             return False
@@ -229,7 +229,7 @@ class Trade:
         name_xpath = "tbody/tr/td[2]/select"
         sell_radio_xpath = "tbody/tr[5]/td[2]/div[2]/input"
         amount_xpath = "tbody/tr[9]/td[2]/input"
-        submit_xpath = "tbody/tr[16]/td[1]/a"
+        submit_xpath = "tbody/tr[18]/td[1]/a"
         self.switch_to_main_right_frame()
         main_table_element = self.driver.find_element_by_id("maintable")
         name_element = \
@@ -246,11 +246,12 @@ class Trade:
         submit_element.click()
 
         submit_again_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[1]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[1]"
         goback_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[9]/td/div/a[2]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
         total_price_xpath = \
-            "/html/body/form[2]/table[2]/tbody/tr[7]/td[2]"
+            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
+ 
         self.switch_to_main_manage_p31_frame()
         total_price_element = self.driver.find_element_by_xpath(
                                                     total_price_xpath)
@@ -275,11 +276,11 @@ class Trade:
 
         self.switch_to_main_manage_p32_frame()
         complete_xpath = \
-            "/html/body/table[3]/tbody/tr/td/table/tbody/tr[2]/td"
+             "/html/body/table[2]/tbody/tr/td/div/div[2]/h4/b"
         complete_element = self.driver.find_element_by_xpath(complete_xpath)
         result = complete_element.text
         print(result)
-        if(result.find("已成交") != -1):
+        if(result.find("交易成功") != -1):
             return True
         else:
             return False
