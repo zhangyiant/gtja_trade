@@ -64,6 +64,7 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
     stock_transaction = session.query(StockTransaction).\
                         filter(StockTransaction.buy_or_sell ==
                                StockTransaction.BUY_FLAG).\
+                        filter(StockTransaction.symbol == symbol).\
                                order_by(asc(StockTransaction.price)).\
                                first()
     if stock_transaction is None:
