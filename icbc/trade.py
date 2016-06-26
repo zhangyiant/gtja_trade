@@ -220,6 +220,11 @@ class Trade:
         complete_element = self.driver.find_element_by_xpath(complete_xpath)
         result = complete_element.text
         print(result)
+        complete_button_xpath = \
+            "/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[2]/td/a"
+        complete_button_element = self.driver.find_element_by_xpath(
+            complete_button_xpath)
+        complete_button_element.click()
         if(result.find("交易成功") != -1):
             return True
         else:
@@ -280,6 +285,11 @@ class Trade:
         complete_element = self.driver.find_element_by_xpath(complete_xpath)
         result = complete_element.text
         print(result)
+        complete_button_xpath = \
+            "/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[2]/td/a"
+        complete_button_element = self.driver.find_element_by_xpath(
+            complete_button_xpath)
+        complete_button_element.click()
         if(result.find("交易成功") != -1):
             return True
         else:
