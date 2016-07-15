@@ -18,7 +18,7 @@ import time
 import logging
 
 from gtja.Trade import Trade
-from stock_holding_algorithm.simple_algorithm import SimpleAlgorithm
+from stock_holding_algorithm.simple_algorithm3 import SimpleAlgorithm
 
 class StockProcessor(object):
     '''
