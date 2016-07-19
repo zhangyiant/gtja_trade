@@ -168,7 +168,7 @@ class Trade:
         name_xpath = "tbody/tr/td[2]/select"
         buy_radio_xpath = "tbody/tr[5]/td[2]/div[1]/input"
         amount_xpath = "tbody/tr[9]/td[2]/input"
-        submit_xpath = "tbody/tr[18]/td[1]/a"
+        submit_xpath = "tbody/tr[16]/td[1]/a"
         self.switch_to_main_right_frame()
         main_table_element = self.driver.find_element_by_id("maintable")
         name_element = \
@@ -234,7 +234,7 @@ class Trade:
         name_xpath = "tbody/tr/td[2]/select"
         sell_radio_xpath = "tbody/tr[5]/td[2]/div[2]/input"
         amount_xpath = "tbody/tr[9]/td[2]/input"
-        submit_xpath = "tbody/tr[18]/td[1]/a"
+        submit_xpath = "tbody/tr[16]/td[1]/a"
         self.switch_to_main_right_frame()
         main_table_element = self.driver.find_element_by_id("maintable")
         name_element = \
