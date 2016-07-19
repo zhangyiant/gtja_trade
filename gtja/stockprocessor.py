@@ -145,14 +145,6 @@ class StockProcessor(object):
 
         amount = int(suggested_amount/100) * 100
 
-        # we suppost we need 10 for transaction service fee,
-        # which is a big enough number
-        # for normal transaction
-        if (buy_or_sell == "Buy"):
-            cash_offset = -1 * (amount * stock_price + 10)
-        else:
-            cash_offset = amount * stock_price - 10
-
         if (amount >= 100):
             debug_msg = \
  "stock_symbol: {0}\nbuy_or_sell: {1}\namount: {2}\nstock_price: {3}".format(
@@ -160,8 +152,6 @@ class StockProcessor(object):
                     buy_or_sell,
                     amount,
                     stock_price)
-            self.logger.debug(debug_msg)
-            debug_msg = "cash_offset: {0}".format(cash_offset)
             self.logger.debug(debug_msg)
 
             if (buy_or_sell == "Buy"):
@@ -180,8 +170,7 @@ class StockProcessor(object):
                         if (commission_state == "已成"):
                             complete_buy_transaction(stock_symbol,
                                                      stock_price,
-                                                     amount,
-                                                     cash_offset)
+                                                     amount)
                         else:
                             print("Unknown error in canceling transaction")
                             self.logger.debug(
@@ -189,8 +178,7 @@ class StockProcessor(object):
                 else:
                     complete_buy_transaction(stock_symbol,
                                              stock_price,
-                                             amount,
-                                             cash_offset)
+                                             amount)
             elif (buy_or_sell == "Sell"):
                 lowest_buy_price = StockTransaction.\
                                    get_lowest_buy_price(stock_symbol)
@@ -216,8 +204,7 @@ class StockProcessor(object):
                         if (commission_state == "已成"):
                             complete_sell_transaction(stock_symbol,
                                                       stock_price,
-                                                      amount,
-                                                      cash_offset)
+                                                      amount)
                         else:
                             print("Unknown error in canceling transaction")
                             self.logger.debug(
@@ -225,8 +212,7 @@ class StockProcessor(object):
                 else:
                     complete_sell_transaction(stock_symbol,
                                               stock_price,
-                                              amount,
-                                              cash_offset)
+                                              amount)
             else:
                 print("Error!")
 

@@ -2,6 +2,7 @@
     utility
 '''
 from datetime import datetime
+import logging
 from stock_db.db_stock import \
     StockCash, \
     StockTransaction, \
@@ -9,7 +10,51 @@ from stock_db.db_stock import \
 from stock_db.db_connection import get_default_db_connection
 from sqlalchemy import asc
 
-def complete_buy_transaction(symbol, price, quantity, cash_offset, conn=None):
+LOGGER = logging.getLogger(__name__)
+
+def is_shanghai_stock(symbol):
+    if symbol[0] == "6":
+        return True
+    else:
+        return False
+
+def get_commission_fee(price, quantity):
+    total = price * quantity * 0.0006
+    result = round(total, 2)
+    if result >= 5:
+        return result
+    else:
+        return 5.0
+
+def get_transfer_fee(price, quantity):
+    total = price * quantity * 0.00002
+    result = round(total, 2)
+    return result
+
+def get_tax_fee(price, quantity):
+    total = price * quantity * 0.001
+    result = round(total, 2)
+    return result
+
+def buy_fee(symbol, price, quantity):
+    if is_shanghai_stock(symbol):
+        result = get_commission_fee(price, quantity) + \
+                 get_transfer_fee(price, quantity)
+    else:
+        result = get_commission_fee(price, quantity)
+    return result
+
+def sell_fee(symbol, price, quantity):
+    if is_shanghai_stock(symbol):
+        result = get_commission_fee(price, quantity) + \
+                 get_tax_fee(price, quantity) + \
+                 get_transfer_fee(price, quantity)
+    else:
+        result = get_commission_fee(price, quantity) + \
+                 get_tax_fee(price, quantity)
+    return result
+
+def complete_buy_transaction(symbol, price, quantity, conn=None):
     '''
         update DB after buy transaction
     '''
@@ -24,7 +69,11 @@ def complete_buy_transaction(symbol, price, quantity, cash_offset, conn=None):
         session.close()
         raise Exception("Save buy transaction failed")
 
-    stock_cash.amount = stock_cash.amount + cash_offset
+    LOGGER.debug("Amount before: {0}".format(stock_cash.amount))
+    stock_cash.amount = stock_cash.amount - \
+                        price * quantity - \
+                        buy_fee(symbol, price, quantity)
+    LOGGER.debug("Amount after: {0}".format(stock_cash.amount))
 
     stock_transaction = StockTransaction()
     stock_transaction.symbol = symbol
@@ -39,7 +88,7 @@ def complete_buy_transaction(symbol, price, quantity, cash_offset, conn=None):
     session.close()
     return
 
-def complete_sell_transaction(symbol, price, quantity, cash_offset, conn=None):
+def complete_sell_transaction(symbol, price, quantity, conn=None):
     '''
         update DB after sell transaction
     '''
@@ -54,7 +103,11 @@ def complete_sell_transaction(symbol, price, quantity, cash_offset, conn=None):
         session.close()
         raise Exception("Save sell transaction failed")
 
-    stock_cash.amount = stock_cash.amount + cash_offset
+    LOGGER.debug("Amount before: {0}".format(stock_cash.amount))
+    stock_cash.amount = stock_cash.amount + \
+                        price * quantity - \
+                        sell_fee(symbol, price, quantity)
+    LOGGER.debug("Amount after: {0}".format(stock_cash.amount))
 
     # get lowest buy transaction
     stock_transaction = session.query(StockTransaction).\
