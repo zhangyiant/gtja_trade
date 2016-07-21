@@ -186,6 +186,9 @@ class StockProcessor(object):
                                             get_lowest_buy_price_quantity(
                                                 stock_symbol)
                 if stock_price - lowest_buy_price < 0.3:
+                    self.logger.debug(
+                        "stock_price is not high enough. {0} vs {1}".format(
+                            stock_price, lowest_buy_price))
                     return
                 if amount > lowest_buy_price_quantity:
                     amount = lowest_buy_price_quantity
