@@ -43,7 +43,8 @@ STOCK_PROCESSOR.login()
 time.sleep(3)
 
 STOCK_PROCESSOR.set_stock_symbol_list(
-    ["600115", "601390", "600584", "000568", "601998"])
+    ["600115", "601390", "600584", "000568", "601998",
+     "002367", "601111"])
 
 def is_transaction_time():
     '''
