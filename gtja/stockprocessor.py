@@ -89,14 +89,6 @@ class StockProcessor(object):
 
         return total
 
-    def update_cash_table(self, symbol, amount_offset):
-        stock_cash_table = StockCashTable()
-        stock_cash = stock_cash_table.get_stock_cash_by_symbol(symbol)
-        new_amount = stock_cash.get_amount() + amount_offset
-        stock_cash.set_amount(new_amount)
-        stock_cash_table.update_stock_cash(stock_cash)
-        return
-
     def add_transaction(self, symbol, buy_or_sell, quantity, price):
         stock_transaction = StockTransaction()
         stock_transaction.set_symbol(symbol)
