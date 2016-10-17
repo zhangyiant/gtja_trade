@@ -48,18 +48,6 @@ class Trade:
         print("Please choose 简约版.")
         input("Please press Enter to continue!\n")
 
-        # remove the 2 Ads after logging
-        '''
-        self.switch_to_down_frame()
-        e = self.driver.find_element_by_id("div_2")
-        e = e.find_element_by_id("emall_closebtn")
-        e.click()
-        time.sleep(2)
-        self.switch_to_down_frame()
-        e = self.driver.find_element_by_id("div_3")
-        e = e.find_element_by_id("emall_closebtn")
-        e.click()
-        '''
         return
 
     def switch_to_top_frame(self):
@@ -124,8 +112,6 @@ class Trade:
         return
 
     def select_noble_metal(self):
-        self.select_investment()
-        time.sleep(2)
         self.switch_to_top_frame()
         e = self.driver.find_element_by_id("headspan_LV2_16")
         e.click()
