@@ -360,24 +360,32 @@ class Trade:
         return result
 
     def get_current_commission_list(self):
-        current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
-        current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
-        
+        curr_commission_xpath = "/html/body/table[2]" + \
+                                   "/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
+        curr_commission_tbody_xpath = "/html/body/table[3]" + \
+                                               "/tbody/tr/td/table[4]/tbody"
+        test_xpath = curr_commission_tbody_xpath + \
+                     "/tr[1]/td[2]/div"
+        test_value = "股东代码"
+
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
-        
+
         time.sleep(3)
-        
-        element = self.driver.find_element_by_xpath(current_commission_xpath)
+
+        element = self.driver.find_element_by_xpath(curr_commission_xpath)
         element.click()
-        
-        time.sleep(3)
-        
+
+        self.select_main_frame()
+        WebDriverWait(self.driver, 20).until(
+            EC.text_to_be_present_in_element(
+                (By.XPATH, test_xpath),
+                test_value))
+
         self.select_main_frame()
 
-        tbody_element = self.driver.find_element_by_xpath(current_commission_table_tbody_xpath)
-        
+        tbody_element = self.driver.find_element_by_xpath(curr_commission_tbody_xpath)
         row_elements = tbody_element.find_elements_by_xpath("*")
 
         current_commission_list = []
@@ -388,7 +396,7 @@ class Trade:
             current_commission_info.commission_id = int(column_elements[2].text)
             current_commission_info.stock_symbol = column_elements[3].text
             current_commission_info.stock_name = column_elements[4].text
-            current_commission_info.type= column_elements[5].text
+            current_commission_info.type = column_elements[5].text
             current_commission_info.price = float(column_elements[6].text)
 
             current_commission_info.amount = int(float(column_elements[7].text))
