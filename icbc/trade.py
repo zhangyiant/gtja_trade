@@ -4,9 +4,15 @@ Created on 2016年1月17日
 @author: Wenwen
 '''
 import logging
-from selenium import webdriver
 import time
 import re
+
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 class NobleMetalPrice:
     def __init__(self, 
@@ -36,7 +42,7 @@ class Trade:
         Constructor
         '''
         self.logger = logging.getLogger(__name__)
-        self.driver = webdriver.Ie()
+        self.driver = webdriver.Ie(log_level=logging.DEBUG, log_file="ie.log")
         return
 
     def login(self):
@@ -47,6 +53,8 @@ class Trade:
         print("Please input user name and password!")
         print("Please choose 简约版.")
         input("Please press Enter to continue!\n")
+
+        time.sleep(5)
 
         return
 
@@ -79,9 +87,10 @@ class Trade:
         return
 
     def switch_to_main_left_frame(self):
-        self.switch_to_main_frame()
-        left_frame = self.driver.find_element_by_name("_left")
-        self.driver.switch_to.frame(left_frame)
+        self.switch_to_market_frame()
+        WebDriverWait(self.driver,  10).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.NAME, "_left")))
         return
 
     def switch_to_main_right_frame(self):
@@ -104,6 +113,24 @@ class Trade:
         self.driver.switch_to.frame(manage_p32_frame)
         return
 
+    def switch_to_market_frame(self):
+        self.switch_to_content_frame()
+        WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.NAME, "_market")))
+        return
+
+    def switch_to_content_frame(self):
+        self.driver.switch_to_default_content()
+        per_bank_content_frame = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "perbank-content-frame")))
+        #content_frame = self.driver.find_element_by_id("content-frame")
+        self.driver.switch_to.frame(per_bank_content_frame)
+        content_frame = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "content-frame")))
+        self.driver.switch_to.frame(content_frame)
+        return
+
     def select_investment(self):
         self.switch_to_top_frame()
         e = self.driver.find_element_by_id("headspan_LV1_99")
@@ -112,42 +139,75 @@ class Trade:
         return
 
     def select_noble_metal(self):
-        self.switch_to_top_frame()
-        e = self.driver.find_element_by_id("headspan_LV2_16")
-        e.click()
+        self.driver.switch_to_default_content()
+
+        script = 'perbankAtomLocationTW' + \
+                 '("PBL200204","",dse_sessionId)'
+        self.driver.execute_script(script)
+
+        self.switch_to_content_frame()
+
+        noble_metal_xpath = "html/body/div/div/div[6]" + \
+                            "/div/div/div/ul/li[1]/a"
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located(
+                (By.XPATH, noble_metal_xpath)))
+
+        script = 'AtomSerivceSubmit("PBL201311","","","")'
+        self.driver.execute_script(script)
+
+        self.switch_to_content_frame()
+
+        WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.NAME, "_market")))
+
+        WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.NAME, "_left")))
+
         return
 
     def get_noble_metal_price_list(self):
         self.switch_to_main_left_frame()
-        main_transaction_area_element = self.driver.find_element_by_id("主交易区")
-        # tbody/tr/td/table[1]/tbody/tr[1]/td[0]
+        main_transaction_area_element = self.driver.\
+                                        find_element_by_id(
+                                            "主交易区")
+        # tbody/tr/td/div/table[2]/tbody/tr[1]/td[0]
         noble_metal_price_list = []
+        base_table_xpath = "tbody/tr/td/div/table[2]/tbody"
         for i in range(8):
-            name_xpath = "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[1]".format(i+2)
-            buying_price_xpath = \
-                "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[3]/a/span".format(i+2)
-            selling_price_xpath = \
-                "tbody/tr/td/div/table[2]/tbody/tr[{0}]/td[4]/a/span".format(i+2)
-            e = main_transaction_area_element.find_element_by_xpath(
-                                                                name_xpath)
-            name = e.text
-            e = main_transaction_area_element.find_element_by_xpath(
-                                                        buying_price_xpath)
-            buying_price = float(e.text)
-            e = main_transaction_area_element.find_element_by_xpath(
-                                                        selling_price_xpath)
-            selling_price = float(e.text)
+            name_xpath = base_table_xpath + \
+                         "/tr[{0}]/td[1]".format(i+2)
+            buying_price_xpath = base_table_xpath + \
+                                 "/tr[{0}]/td[4]/a/span".\
+                                 format(i+2)
+            selling_price_xpath = base_table_xpath + \
+                                  "/tr[{0}]/td[5]/a/span".\
+                                  format(i+2)
+            element = main_transaction_area_element.\
+                      find_element_by_xpath(
+                          name_xpath)
+            name = element.text
+            element = main_transaction_area_element.\
+                      find_element_by_xpath(
+                          buying_price_xpath)
+            buying_price = float(element.text)
+            element = main_transaction_area_element.\
+                      find_element_by_xpath(
+                          selling_price_xpath)
+            selling_price = float(element.text)
             noble_metal_price = NobleMetalPrice(name,
                                                 buying_price,
                                                 selling_price)
             noble_metal_price_list.append(noble_metal_price)
         return noble_metal_price_list
 
-    def get_nobal_metal_price(self,name):
-        nobal_metal_price_list = self.get_noble_metal_price_list()
-        for nobal_metal_price in nobal_metal_price_list:
-            if nobal_metal_price.name == name:
-                return nobal_metal_price
+    def get_noble_metal_price(self,name):
+        noble_metal_price_list = self.get_noble_metal_price_list()
+        for noble_metal_price in noble_metal_price_list:
+            if noble_metal_price.name == name:
+                return noble_metal_price
         return None
 
     def buy_noble_metal(self, name, amount, price):

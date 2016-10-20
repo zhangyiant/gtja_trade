@@ -7,7 +7,7 @@ import logging
 import configparser
 import time
 from icbc.trade import Trade
-from icbc.processor import NobalMetalProcessor
+from icbc.processor import NobleMetalProcessor
 import stock_db
 
 # Monday 7:00 - Saturday 4:00
@@ -30,15 +30,17 @@ logger.addHandler(fh)
 stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 if __name__ == '__main__':
-    nobal_metal_processor = NobalMetalProcessor()
-    nobal_metal_processor.set_nobal_metal_name_list(["人民币账户白银","人民币账户黄金", "人民币账户钯金"])
-    nobal_metal_processor.login()
+    noble_metal_processor = NobleMetalProcessor()
+    noble_metal_processor.set_noble_metal_name_list(["人民币账户白银","人民币账户黄金", "人民币账户钯金"])
+    noble_metal_processor.login()
     t = 10
     while True:
-        nobal_metal_name = nobal_metal_processor.get_one_nobal_metal()
-        nobal_metal_processor.process_nobal_metal(nobal_metal_name)
+        noble_metal_name = noble_metal_processor.get_one_noble_metal()
+        noble_metal_processor.process_noble_metal(noble_metal_name)
+        time.sleep(20)
+        break
 
-    nobal_metal_processor.close()
+    #noble_metal_processor.close()
     
     
     #trade = Trade()
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     #t = trade.sell_noble_metal("人民币账户白银", 1, 2)
     #print(t)
     
-    #nobal_metal_price = trade.get_nobal_metal_price("人民币账户白银")
-    #print(nobal_metal_price)
+    #noble_metal_price = trade.get_noble_metal_price("人民币账户白银")
+    #print(noble_metal_price)
     #time.sleep(10)
     #trade.close()

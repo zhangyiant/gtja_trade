@@ -14,7 +14,7 @@ from .utility import \
     complete_buy_transaction, \
     complete_sell_transaction
 
-class NobalMetalProcessor:
+class NobleMetalProcessor:
     '''
     classdocs
     '''
@@ -35,44 +35,48 @@ class NobalMetalProcessor:
         self.trade.close()
         return
 
-    def set_nobal_metal_name_list(self, nobal_metal_name_list):
-        self.nobal_metal_name_list = nobal_metal_name_list
+    def set_noble_metal_name_list(self, noble_metal_name_list):
+        self.noble_metal_name_list = noble_metal_name_list
         return
 
-    def get_nobal_metal_name_list(self):
-        return self.nobal_metal_name_list
+    def get_noble_metal_name_list(self):
+        return self.noble_metal_name_list
 
-    def get_one_nobal_metal(self):
-        nobal_metal_name = self.nobal_metal_name_list[self.process_index]
+    def get_one_noble_metal(self):
+        noble_metal_name = self.noble_metal_name_list[self.process_index]
         self.process_index = (self.process_index + 1) % \
-                                 (len(self.nobal_metal_name_list))
-        return nobal_metal_name
+                                 (len(self.noble_metal_name_list))
+        return noble_metal_name
 
-    def process_nobal_metal(self, nobal_metal_name):
+    def process_noble_metal(self, noble_metal_name):
         '''
-            process the nobal metal
+            process the noble metal
         '''
-        print("process {0}".format(nobal_metal_name))
+        print("process {0}".format(noble_metal_name))
         self.trade.select_noble_metal()
-        nobal_metal_price = self.trade.get_nobal_metal_price(nobal_metal_name)
-        print("price: {0}".format(nobal_metal_price))
 
+        noble_metal_price = self.trade.\
+                            get_noble_metal_price(noble_metal_name)
+        print("price: {0}".format(noble_metal_price))
+
+        return
         stock_price_range_table = StockPriceRangeTable()
         stock_price_range = \
-            stock_price_range_table.\
-            get_stock_stock_price_range_by_symbol(nobal_metal_name)
+                            stock_price_range_table.\
+                            get_stock_stock_price_range_by_symbol(
+                                noble_metal_name)
         price_low = stock_price_range.get_price_low()
         price_high = stock_price_range.get_price_high()
 
         stock_cash_table = StockCashTable()
-        nobal_metal_cash = stock_cash_table.\
-                           get_stock_cash_by_symbol(nobal_metal_name)
+        noble_metal_cash = stock_cash_table.\
+                           get_stock_cash_by_symbol(noble_metal_name)
         owned_quantity = StockTransaction.\
-                         get_owned_quantity(nobal_metal_name)
+                         get_owned_quantity(noble_metal_name)
 
         # buy
-        buy_price = nobal_metal_price.selling_price
-        algorithm = SimpleAlgorithm(symbol=nobal_metal_name,
+        buy_price = noble_metal_price.selling_price
+        algorithm = SimpleAlgorithm(symbol=noble_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
                                     current_price=buy_price)
@@ -83,21 +87,21 @@ class NobalMetalProcessor:
         if (buy_or_sell is not None) and (buy_or_sell == "Buy"):
             amount = algorithm.get_suggested_amount()
             print("buy {0}, price: {1}, amount: {2}".\
-                  format(nobal_metal_name, buy_price, amount))
-            result = self.trade.buy_noble_metal(nobal_metal_name,
+                  format(noble_metal_name, buy_price, amount))
+            result = self.trade.buy_noble_metal(noble_metal_name,
                                                 amount,
                                                 buy_price)
             print(result)
             if result:
                 print("update db")
-                complete_buy_transaction(nobal_metal_name,
+                complete_buy_transaction(noble_metal_name,
                                          buy_price,
                                          amount)
             return
 
         # sell
-        sell_price = nobal_metal_price.buying_price
-        algorithm = SimpleAlgorithm(symbol=nobal_metal_name,
+        sell_price = noble_metal_price.buying_price
+        algorithm = SimpleAlgorithm(symbol=noble_metal_name,
                                     start_price=price_low  ,
                                     stop_price=price_high,
                                     current_price=sell_price)
@@ -107,23 +111,23 @@ class NobalMetalProcessor:
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
             lowest_price = StockTransaction.\
-                           get_lowest_buy_price(nobal_metal_name)
+                           get_lowest_buy_price(noble_metal_name)
             if sell_price - lowest_price < 0.04:
                 return
             amount = algorithm.get_suggested_amount()
             quantity = StockTransaction.\
-                       get_lowest_buy_price_quantity(nobal_metal_name)
+                       get_lowest_buy_price_quantity(noble_metal_name)
             if amount >= quantity:
                 amount = quantity
 
             print("sell {0}, price: {1}, amount: {2}".\
-                  format(nobal_metal_name, sell_price, amount))
-            result = self.trade.sell_noble_metal(nobal_metal_name,
+                  format(noble_metal_name, sell_price, amount))
+            result = self.trade.sell_noble_metal(noble_metal_name,
                                                  amount,
                                                  sell_price)
             print(result)
             if result:
-                complete_sell_transaction(nobal_metal_name,
+                complete_sell_transaction(noble_metal_name,
                                           sell_price,
                                           amount)
             return
