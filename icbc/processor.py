@@ -59,9 +59,6 @@ class NobleMetalProcessor:
                             get_noble_metal_price(noble_metal_name)
         print("price: {0}".format(noble_metal_price))
 
-        self.trade.sell_noble_metal("人民币账户白银", 1, 2)
-        return
-
         stock_price_range_table = StockPriceRangeTable()
         stock_price_range = \
                             stock_price_range_table.\

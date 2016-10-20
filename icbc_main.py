@@ -37,10 +37,8 @@ if __name__ == '__main__':
     while True:
         noble_metal_name = noble_metal_processor.get_one_noble_metal()
         noble_metal_processor.process_noble_metal(noble_metal_name)
-        time.sleep(20)
-        break
 
-    #noble_metal_processor.close()
+    noble_metal_processor.close()
     
     
     #trade = Trade()
