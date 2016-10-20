@@ -299,30 +299,44 @@ class Trade:
     def get_commission_state(self, commission_id):
         commission_list = self.get_current_commission_list()
         found = False
+        result = None
         for commission in commission_list:
             if (commission.commission_id == commission_id):
                 found = True
+                result = commission
                 break
         if (found):
-            return commission.trade_state
+            return result.trade_state
         else:
             return "Error"
-    
+
     def cancel_commission(self, commission_id):
-        current_commission_xpath = "/html/body/table[2]/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
-        current_commission_table_tbody_xpath = "/html/body/table[3]/tbody/tr/td/table[4]/tbody"
-        
+        curr_commission_xpath = "/html/body/table[2]" + \
+                                "/tbody/tr[6]/td/table/tbody/tr[3]/td[3]/a"
+        curr_commission_tbody_xpath = "/html/body/table[3]" + \
+                                      "/tbody/tr/td/table[4]/tbody"
+
+        test_xpath = curr_commission_tbody_xpath + \
+                     "/tr[1]/td[2]/div"
+        test_value = "股东代码"
+
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
-        
-        element = self.driver.find_element_by_xpath(current_commission_xpath)
+
+        element = self.driver.find_element_by_xpath(curr_commission_xpath)
         element.click()
-        
+
+
+        self.select_main_frame()
+        WebDriverWait(self.driver, 20).until(
+            EC.text_to_be_present_in_element(
+                (By.XPATH, test_xpath),
+                test_value))
+
         self.select_main_frame()
 
-        tbody_element = self.driver.find_element_by_xpath(current_commission_table_tbody_xpath)
-        
+        tbody_element = self.driver.find_element_by_xpath(curr_commission_tbody_xpath)
         row_elements = tbody_element.find_elements_by_xpath("*")
 
         found = False
