@@ -59,7 +59,9 @@ class NobleMetalProcessor:
                             get_noble_metal_price(noble_metal_name)
         print("price: {0}".format(noble_metal_price))
 
+        self.trade.sell_noble_metal("人民币账户白银", 1, 2)
         return
+
         stock_price_range_table = StockPriceRangeTable()
         stock_price_range = \
                             stock_price_range_table.\
@@ -68,16 +70,10 @@ class NobleMetalProcessor:
         price_low = stock_price_range.get_price_low()
         price_high = stock_price_range.get_price_high()
 
-        stock_cash_table = StockCashTable()
-        noble_metal_cash = stock_cash_table.\
-                           get_stock_cash_by_symbol(noble_metal_name)
-        owned_quantity = StockTransaction.\
-                         get_owned_quantity(noble_metal_name)
-
         # buy
         buy_price = noble_metal_price.selling_price
         algorithm = SimpleAlgorithm(symbol=noble_metal_name,
-                                    start_price=price_low  ,
+                                    start_price=price_low,
                                     stop_price=price_high,
                                     current_price=buy_price)
 
