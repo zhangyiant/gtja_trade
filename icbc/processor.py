@@ -66,6 +66,7 @@ class NobleMetalProcessor:
         print("process {0}".format(noble_metal_name))
 
         try:
+            self.trade.main_page()
             self.trade.select_noble_metal()
         except StaleElementReferenceException as stale_exception:
             error_msg = "select noble metal error. " + \
@@ -80,8 +81,9 @@ class NobleMetalProcessor:
         except WebDriverException as web_driver_exception:
             error_msg = "select noble metal error." + \
                         "WebDriverException{0}"
+            error_msg = error_msg.format(web_driver_exception)
             self.logger.error(error_msg)
-            print(error_msg.format(web_driver_exception))
+            print(error_msg)
             self.error_counter += 1
             if self.error_counter > 10:
                 raise NobleMetalProcessorException("WebDriver Exception")
@@ -96,7 +98,7 @@ class NobleMetalProcessor:
                                 get_noble_metal_price(noble_metal_name)
             print("price: {0}".format(noble_metal_price))
         except Exception as exception:
-            self.logger("get price exception")
+            self.logger.debug("get price exception")
             print("get price exception: {0}".format(exception))
             return
 

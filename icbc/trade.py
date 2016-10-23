@@ -62,7 +62,16 @@ class Trade:
         return
 
     def main_page(self):
-        self.driver.get("https://mybank.icbc.com.cn/icbc/perbank/index.jsp")
+        self.logger.debug("main_page")
+        self.driver.switch_to_default_content()
+        logo_xpath = "/html/body/boby/div[3]/div/div/img"
+        logo_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, logo_xpath)))
+        logo_element.click()
+
+        #script = "javascript:logPV('PBL200202');"
+        #script += "perbankAtomLocationTW('PBL200202','',dse_sessionId);"
+        #self.driver.execute_script(script)
         return
 
     def switch_to_top_frame(self):
@@ -137,6 +146,7 @@ class Trade:
         content_frame = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, "content-frame")))
         self.driver.switch_to.frame(content_frame)
+        self.logger.debug("switched to content_frame")
         return
 
     def select_investment(self):
@@ -149,6 +159,9 @@ class Trade:
     def select_noble_metal(self):
         self.driver.switch_to_default_content()
 
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located(
+                (By.ID, "quanbu")))
         quanbu_element = self.driver.find_element_by_id("quanbu")
         quanbu_element.click()
         quanbu_element.click()
@@ -158,14 +171,19 @@ class Trade:
 
         self.switch_to_content_frame()
 
+        self.logger.debug("before find noble metal link")
         noble_metal_xpath = "html/body/div/div/div[6]" + \
                             "/div/div/div/ul/li[1]/a"
         WebDriverWait(self.driver, 20).until(
             EC.presence_of_element_located(
                 (By.XPATH, noble_metal_xpath)))
 
+        self.logger.debug("after find noble metal link")
+
+        self.logger.debug("before script")
         script = 'AtomSerivceSubmit("PBL201311","","","")'
         self.driver.execute_script(script)
+        self.logger.debug("after script")
 
         counter = 0
         while counter < 3:
