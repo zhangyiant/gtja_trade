@@ -140,12 +140,12 @@ class Trade:
     def switch_to_content_frame(self):
         self.driver.switch_to_default_content()
         per_bank_content_frame = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "perbank-content-frame")))
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.ID, "perbank-content-frame")))
         #content_frame = self.driver.find_element_by_id("content-frame")
-        self.driver.switch_to.frame(per_bank_content_frame)
         content_frame = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "content-frame")))
-        self.driver.switch_to.frame(content_frame)
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.ID, "content-frame")))
         self.logger.debug("switched to content_frame")
         return
 
