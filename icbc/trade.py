@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.common.exceptions import StaleElementReferenceException
 
 class NobleMetalPrice:
     """
@@ -46,6 +46,7 @@ class Trade:
         '''
         self.logger = logging.getLogger(__name__)
         self.driver = webdriver.Ie(log_level=logging.DEBUG, log_file="ie.log")
+        self.driver.implicitly_wait(10)
         return
 
     def login(self):
@@ -58,6 +59,19 @@ class Trade:
 
         time.sleep(5)
 
+        return
+
+    def main_page(self):
+        self.logger.debug("main_page")
+        self.driver.switch_to_default_content()
+        logo_xpath = "/html/body/boby/div[3]/div/div/img"
+        logo_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, logo_xpath)))
+        logo_element.click()
+
+        #script = "javascript:logPV('PBL200202');"
+        #script += "perbankAtomLocationTW('PBL200202','',dse_sessionId);"
+        #self.driver.execute_script(script)
         return
 
     def switch_to_top_frame(self):
@@ -126,12 +140,13 @@ class Trade:
     def switch_to_content_frame(self):
         self.driver.switch_to_default_content()
         per_bank_content_frame = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "perbank-content-frame")))
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.ID, "perbank-content-frame")))
         #content_frame = self.driver.find_element_by_id("content-frame")
-        self.driver.switch_to.frame(per_bank_content_frame)
         content_frame = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "content-frame")))
-        self.driver.switch_to.frame(content_frame)
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.ID, "content-frame")))
+        self.logger.debug("switched to content_frame")
         return
 
     def select_investment(self):
@@ -144,34 +159,62 @@ class Trade:
     def select_noble_metal(self):
         self.driver.switch_to_default_content()
 
-        script = 'perbankAtomLocationTW' + \
-                 '("PBL200204","",dse_sessionId)'
-        self.driver.execute_script(script)
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located(
+                (By.ID, "quanbu")))
+        quanbu_element = self.driver.find_element_by_id("quanbu")
+        quanbu_element.click()
+        quanbu_element.click()
+        #script = 'perbankAtomLocationTW' + \
+        #         '("PBL200204","",dse_sessionId)'
+        #self.driver.execute_script(script)
 
         self.switch_to_content_frame()
 
+        self.logger.debug("before find noble metal link")
         noble_metal_xpath = "html/body/div/div/div[6]" + \
                             "/div/div/div/ul/li[1]/a"
         WebDriverWait(self.driver, 20).until(
             EC.presence_of_element_located(
                 (By.XPATH, noble_metal_xpath)))
 
+        self.logger.debug("after find noble metal link")
+
+        self.logger.debug("before script")
         script = 'AtomSerivceSubmit("PBL201311","","","")'
         self.driver.execute_script(script)
+        self.logger.debug("after script")
 
-        self.switch_to_content_frame()
+        counter = 0
+        while counter < 3:
+            found_exception = False
+            try:
+                self.switch_to_content_frame()
 
-        WebDriverWait(self.driver, 10).until(
-            EC.frame_to_be_available_and_switch_to_it(
-                (By.NAME, "_market")))
+                WebDriverWait(self.driver, 10).until(
+                    EC.frame_to_be_available_and_switch_to_it(
+                        (By.NAME, "_market")))
 
-        WebDriverWait(self.driver, 10).until(
-            EC.frame_to_be_available_and_switch_to_it(
-                (By.NAME, "_left")))
+                WebDriverWait(self.driver, 10).until(
+                    EC.frame_to_be_available_and_switch_to_it(
+                        (By.NAME, "_left")))
 
+            except StaleElementReferenceException as stale_exception:
+                error_msg = "select noble metal: StaleException {0}"
+                error_msg = error_msg.format(stale_exception)
+                self.logger.error(error_msg)
+                print(error_msg)
+                found_exception = True
+            if not found_exception:
+                break
+            time.sleep(10)
+            counter = counter + 1
+        if counter == 3:
+            raise StaleElementReferenceException(
+                "select noble metal: tried 3 times")
         return
 
-    def get_noble_metal_price_list(self):
+    def _unsafe_get_noble_metal_price_list(self):
         self.switch_to_main_left_frame()
         main_transaction_area_element = self.driver.\
                                         find_element_by_id(
@@ -204,6 +247,29 @@ class Trade:
                                                 buying_price,
                                                 selling_price)
             noble_metal_price_list.append(noble_metal_price)
+        return noble_metal_price_list
+
+    def get_noble_metal_price_list(self):
+        noble_metal_price_list = None
+        counter = 0
+        while counter < 3:
+            found_exception = False
+            try:
+                noble_metal_price_list = self.\
+                                         _unsafe_get_noble_metal_price_list()
+            except StaleElementReferenceException as stale_exception:
+                error_msg = "get_noble_metal_price_list: Stale Exception"
+                error_msg += "\n{0}".format(stale_exception)
+                self.logger.error(error_msg)
+                print(error_msg)
+                found_exception = True
+            if not found_exception:
+                break
+            counter = counter + 1
+            time.sleep(10)
+        if counter == 3:
+            raise StaleElementReferenceException(
+                "get_noble_metal_price_list: Tried 3 times.")
         return noble_metal_price_list
 
     def get_noble_metal_price(self,name):
@@ -304,7 +370,7 @@ class Trade:
             "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
         total_price_xpath = \
             "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
- 
+
         self.switch_to_main_right_frame()
         total_price_element = self.driver.find_element_by_xpath(
             total_price_xpath)

@@ -3,6 +3,11 @@ Created on 2016年1月24日
 
 @author: Wenwen
 '''
+import time
+import logging
+from selenium.common.exceptions import \
+    StaleElementReferenceException, \
+    WebDriverException
 from .trade import Trade
 from stock_db.db_stock import \
     StockCashTable, \
@@ -13,6 +18,9 @@ from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
 from .utility import \
     complete_buy_transaction, \
     complete_sell_transaction
+
+class NobleMetalProcessorException(Exception):
+    pass
 
 class NobleMetalProcessor:
     '''
@@ -25,6 +33,8 @@ class NobleMetalProcessor:
         '''
         self.trade = Trade()
         self.process_index = 0
+        self.error_counter = 0
+        self.logger = logging.getLogger(__name__)
         return
 
     def login(self):
@@ -52,12 +62,45 @@ class NobleMetalProcessor:
         '''
             process the noble metal
         '''
-        print("process {0}".format(noble_metal_name))
-        self.trade.select_noble_metal()
 
-        noble_metal_price = self.trade.\
-                            get_noble_metal_price(noble_metal_name)
-        print("price: {0}".format(noble_metal_price))
+        print("process {0}".format(noble_metal_name))
+
+        try:
+            self.trade.main_page()
+            self.trade.select_noble_metal()
+        except StaleElementReferenceException as stale_exception:
+            error_msg = "select noble metal error. " + \
+                        "StaleElementReferenceException{0}"
+            self.logger.error(error_msg)
+            print(error_msg.format(stale_exception))
+            self.error_counter += 1
+            if self.error_counter > 10:
+                raise NobleMetalProcessorException("Stale Element Exception")
+            time.sleep(10)
+            return
+        except WebDriverException as web_driver_exception:
+            error_msg = "select noble metal error." + \
+                        "WebDriverException{0}"
+            error_msg = error_msg.format(web_driver_exception)
+            self.logger.error(error_msg)
+            print(error_msg)
+            self.error_counter += 1
+            if self.error_counter > 10:
+                raise NobleMetalProcessorException("WebDriver Exception")
+            time.sleep(10)
+            return
+
+        # reset counter
+        self.error_counter = 0
+
+        try:
+            noble_metal_price = self.trade.\
+                                get_noble_metal_price(noble_metal_name)
+            print("price: {0}".format(noble_metal_price))
+        except Exception as exception:
+            self.logger.debug("get price exception")
+            print("get price exception: {0}".format(exception))
+            return
 
         stock_price_range_table = StockPriceRangeTable()
         stock_price_range = \
