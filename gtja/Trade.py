@@ -1,16 +1,19 @@
 '''
 Created on Jul 8, 2015
 
-@author: yizhang
+@author: Antee Zhang
+
 '''
+import time
+import logging
+from datetime import datetime
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoAlertPresentException
-import time
-import logging
-from datetime import datetime
+from selenium.common.exceptions import TimeoutException
 
 class CurrentCommissionInfo:
     def __init__(self):
@@ -382,56 +385,86 @@ class Trade:
                      "/tr[1]/td[2]/div"
         test_value = "股东代码"
 
-        self.enter_stock_menu()
-        time.sleep(3)
-        self.select_menu_frame()
-
-        time.sleep(3)
-
-        element = self.driver.find_element_by_xpath(curr_commission_xpath)
-        element.click()
-
-        self.select_main_frame()
-        WebDriverWait(self.driver, 40).until(
-            EC.text_to_be_present_in_element(
-                (By.XPATH, test_xpath),
-                test_value))
-
-        self.select_main_frame()
-
-        tbody_element = self.driver.find_element_by_xpath(curr_commission_tbody_xpath)
-        row_elements = tbody_element.find_elements_by_xpath("*")
-
-        current_commission_list = []
-        for row_element in row_elements[1:-1]:
-            column_elements = row_element.find_elements_by_tag_name("td")
-            current_commission_info = CurrentCommissionInfo()
-            current_commission_info.shareholder_code = column_elements[1].text
-            current_commission_info.commission_id = int(column_elements[2].text)
-            current_commission_info.stock_symbol = column_elements[3].text
-            current_commission_info.stock_name = column_elements[4].text
-            current_commission_info.type = column_elements[5].text
-            current_commission_info.price = float(column_elements[6].text)
-
-            current_commission_info.amount = int(float(column_elements[7].text))
-            datetime_string = column_elements[8].text
-            year = int(datetime_string[0:4])
-            month = int(datetime_string[4:6])
-            day = int(datetime_string[6:8])
-            hour = int(datetime_string[8:10])
-            minute = int(datetime_string[10:12])
-            second = int(datetime_string[12:14])
+        counter = 0
+        while counter < 3:
+            found_exception = False
             try:
-                current_commission_info.datetime = datetime(year,month,day,hour,minute,second)
-            except:
-                print("Commission Info DateTime Error: {0}".format(datetime_string))
-                current_commission_info.datetime = datetime.now()
-            current_commission_info.trade_volumn = int(column_elements[9].text)
-            current_commission_info.trade_state = column_elements[10].text
-            current_commission_list.append(current_commission_info)
+                self.enter_stock_menu()
+                time.sleep(3)
+                self.select_menu_frame()
+
+                time.sleep(3)
+
+                element = self.driver.find_element_by_xpath(
+                    curr_commission_xpath)
+                element.click()
+
+                self.select_main_frame()
+                WebDriverWait(self.driver, 20).until(
+                    EC.text_to_be_present_in_element(
+                        (By.XPATH, test_xpath),
+                        test_value))
+
+                self.select_main_frame()
+
+                tbody_element = self.driver.find_element_by_xpath(
+                    curr_commission_tbody_xpath)
+                row_elements = tbody_element.find_elements_by_xpath("*")
+
+                current_commission_list = []
+                for row_element in row_elements[1:-1]:
+                    column_elements = row_element.\
+                                      find_elements_by_tag_name("td")
+                    current_commission_info = CurrentCommissionInfo()
+                    current_commission_info.\
+                        shareholder_code = column_elements[1].text
+                    current_commission_info.\
+                        commission_id = int(column_elements[2].text)
+                    current_commission_info.\
+                        stock_symbol = column_elements[3].text
+                    current_commission_info.\
+                        stock_name = column_elements[4].text
+                    current_commission_info.\
+                        type = column_elements[5].text
+                    current_commission_info.\
+                        price = float(column_elements[6].text)
+                    current_commission_info.\
+                        amount = int(float(column_elements[7].text))
+                    datetime_string = column_elements[8].text
+                    year = int(datetime_string[0:4])
+                    month = int(datetime_string[4:6])
+                    day = int(datetime_string[6:8])
+                    hour = int(datetime_string[8:10])
+                    minute = int(datetime_string[10:12])
+                    second = int(datetime_string[12:14])
+                    try:
+                        current_commission_info.\
+                            datetime = datetime(
+                                year, month, day, hour, minute, second)
+                    except:
+                        print("Commission Info DateTime Error: {0}".\
+                              format(datetime_string))
+                    current_commission_info.datetime = datetime.now()
+                    current_commission_info.\
+                        trade_volumn = int(column_elements[9].text)
+                    current_commission_info.\
+                        trade_state = column_elements[10].text
+                    current_commission_list.append(current_commission_info)
+
+            except TimeoutException as timeout_exception:
+                error_msg = "TimeoutException:{0}".format(
+                    timeout_exception)
+                self.logger.debug(error_msg)
+                print(error_msg)
+                found_exception = True
+
+            if not found_exception:
+                break
+            counter += 1
+            time.sleep(10)
 
         return current_commission_list
-    
+
     def buy_stock(self, symbol, price, amount):
         symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
         refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
