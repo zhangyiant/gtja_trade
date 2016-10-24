@@ -392,7 +392,7 @@ class Trade:
         element.click()
 
         self.select_main_frame()
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 40).until(
             EC.text_to_be_present_in_element(
                 (By.XPATH, test_xpath),
                 test_value))
