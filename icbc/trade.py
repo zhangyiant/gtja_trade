@@ -59,6 +59,8 @@ class Trade:
 
         time.sleep(5)
 
+        #self.driver.get_screenshot_as_file("d:/t.png")
+
         return
 
     def main_page(self):
@@ -164,7 +166,7 @@ class Trade:
                 (By.ID, "quanbu")))
         quanbu_element = self.driver.find_element_by_id("quanbu")
         quanbu_element.click()
-        quanbu_element.click()
+        #quanbu_element.click()
         #script = 'perbankAtomLocationTW' + \
         #         '("PBL200204","",dse_sessionId)'
         #self.driver.execute_script(script)
