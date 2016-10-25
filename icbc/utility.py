@@ -33,7 +33,7 @@ def complete_buy_transaction(symbol, price, quantity, conn=None):
     stock_transaction.buy_or_sell = "Buy"
     stock_transaction.quantity = quantity
     stock_transaction.price = price
-    stock_transaction.date = datetime.now()
+    stock_transaction.date = datetime.utcnow()
 
     session.add(stock_transaction)
     session.commit()
@@ -85,7 +85,7 @@ def complete_sell_transaction(symbol, price, quantity, conn=None):
         buy_price=stock_transaction.price,
         buy_date=stock_transaction.date,
         sell_price=price,
-        sell_date=datetime.now())
+        sell_date=datetime.utcnow())
     session.add(stock_closed_transaction)
 
     if stock_transaction.quantity == quantity:
