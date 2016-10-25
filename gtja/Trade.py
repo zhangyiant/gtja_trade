@@ -386,6 +386,7 @@ class Trade:
         test_value = "股东代码"
 
         counter = 0
+        current_commission_list = None
         while counter < 3:
             found_exception = False
             try:
@@ -516,8 +517,10 @@ class Trade:
         commission_id = self.get_last_commission_id(symbol, amount)
         
         print(commission_id)
-        
-        return commission_id       
+
+        if commission_id is None:
+            raise Exception("Get None last commission ID")
+        return commission_id
 
     def sell_stock(self, symbol, price, amount):
         symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
@@ -570,18 +573,31 @@ class Trade:
         commission_id = self.get_last_commission_id(symbol, amount)
          
         print(commission_id)
-         
-        return commission_id       
-    
+
+        if commission_id is None:
+            raise Exception("Get None last commission ID")
+
+        return commission_id
+
     def get_last_commission_id(self, symbol, amount):
+        """
+            get last commission ID
+        """
         commission_list = self.get_current_commission_list()
-        
+
+        if commission_list is None:
+            return None
+
+        if len(commission_list) == 0:
+            return None
+
         commission = commission_list[-1]
         print(commission)
-        if (commission.stock_symbol == symbol and commission.amount == amount):
+        if commission.stock_symbol == symbol and \
+           commission.amount == amount:
             return commission.commission_id
         else:
-            return ""
-           
+            return None
+
     def close(self):
         self.driver.close()
