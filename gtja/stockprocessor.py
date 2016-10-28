@@ -10,6 +10,7 @@ from stock_db.db_stock import StockPriceRangeTable
 from stock_db.db_stock import StockPriceRange
 from stock_db.db_stock import StockTransactionTable
 from stock_db.db_stock import StockTransaction
+from stock_db.db_utility import get_lowest_gain
 from .utility import \
     complete_buy_transaction, \
     complete_sell_transaction
@@ -130,9 +131,9 @@ class StockProcessor(object):
         suggested_amount = simple_algorithm.get_suggested_amount()
 
         result = "Symbol: {0}\nBuy or Sell: {1}\nAmount: {2}".format(
-                                                  stock_symbol,
-                                                  buy_or_sell,
-                                                  suggested_amount)
+            stock_symbol,
+            buy_or_sell,
+            suggested_amount)
         print(result)
 
         amount = int(suggested_amount/100) * 100
@@ -177,7 +178,10 @@ class StockProcessor(object):
                 lowest_buy_price_quantity = StockTransaction.\
                                             get_lowest_buy_price_quantity(
                                                 stock_symbol)
-                if stock_price - lowest_buy_price < 0.3:
+                lowest_gain = get_lowest_gain(stock_symbol)
+                if lowest_gain is None:
+                    lowest_gain = 0.3
+                if stock_price - lowest_buy_price < lowest_gain:
                     self.logger.debug(
                         "stock_price is not high enough. {0} vs {1}".format(
                             stock_price, lowest_buy_price))

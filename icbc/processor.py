@@ -10,10 +10,10 @@ from selenium.common.exceptions import \
     WebDriverException
 from .trade import Trade
 from stock_db.db_stock import \
-    StockCashTable, \
     StockTransaction, \
-    StockTransactionTable, \
     StockPriceRangeTable
+from stock_db.db_utility import \
+    get_lowest_gain
 from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
 from .utility import \
     complete_buy_transaction, \
@@ -148,7 +148,11 @@ class NobleMetalProcessor:
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
             lowest_price = StockTransaction.\
                            get_lowest_buy_price(noble_metal_name)
-            if sell_price - lowest_price < 0.04:
+            lowest_gain = get_lowest_gain(noble_metal_name)
+            if lowest_gain is None:
+                lowest_gain = 0.04
+            print(lowest_gain)
+            if sell_price - lowest_price < lowest_gain:
                 return
             amount = algorithm.get_suggested_amount()
             quantity = StockTransaction.\
