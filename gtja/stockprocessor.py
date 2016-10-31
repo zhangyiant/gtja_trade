@@ -65,43 +65,6 @@ class StockProcessor(object):
             self.stock_process_index % len(self.stock_symbol_list)
         return result
 
-    def get_stock_current_value(self, symbol):
-        stock_cash_table = StockCashTable()
-        stock_cash = stock_cash_table.get_stock_cash_by_symbol(symbol)
-        cash_amount = stock_cash.get_amount()
-
-        stock_transaction_table = StockTransactionTable()
-        stock_transaction_list = \
-            stock_transaction_table.get_stock_transaction_list_by_symbol(
-                                                                       symbol)
-        quantity = 0
-        for stock_transaction in stock_transaction_list:
-            buy_or_sell = stock_transaction.get_buy_or_sell()
-            if (buy_or_sell == "Buy"):
-                quantity = quantity + stock_transaction.get_quantity()
-            elif (buy_or_sell == "Sell"):
-                quantity = quantity - stock_transaction.get_quantity()
-            else:
-                # Need to raise an error
-                return None
-        stock_price = 8.09
-
-        total = cash_amount + quantity*stock_price
-
-        return total
-
-    def add_transaction(self, symbol, buy_or_sell, quantity, price):
-        stock_transaction = StockTransaction()
-        stock_transaction.set_symbol(symbol)
-        stock_transaction.set_buy_or_sell(buy_or_sell)
-        stock_transaction.set_quantity(quantity)
-        stock_transaction.set_price(price)
-        stock_transaction.set_date(datetime.datetime.now())
-
-        stock_transaction_table = StockTransactionTable()
-        stock_transaction_table.add_stock_transaction(stock_transaction)
-        return
-
     def process_stock(self, stock_symbol):
         # get remaining cash for the stock
         stock_cash_table = StockCashTable()
@@ -119,7 +82,7 @@ class StockProcessor(object):
         stock_price_range_table = StockPriceRangeTable()
         stock_price_range = \
             stock_price_range_table.get_stock_stock_price_range_by_symbol(
-                                                                stock_symbol)
+                stock_symbol)
         price_low = stock_price_range.get_price_low()
         price_high = stock_price_range.get_price_high()
 
