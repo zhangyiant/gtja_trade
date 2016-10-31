@@ -26,7 +26,6 @@ class StockProcessor(object):
     classdocs
     '''
 
-
     def __init__(self, account_name, password):
         self.logger = logging.getLogger(__name__)
         self.stock_symbol_list = []
@@ -49,18 +48,30 @@ class StockProcessor(object):
         return
 
     def set_stock_symbol_list(self, stock_symbol_list):
-        self.stock_symbol_list =stock_symbol_list
+        """
+            set symbol list
+        """
+        self.stock_symbol_list = stock_symbol_list
         return
 
     def get_stock_symbol_list(self):
+        """
+            get symbol list
+        """
         return self.stock_symbol_list
 
     def keep_alive(self):
+        """
+            keep alive method
+        """
         #self.trade.enter_stock_menu()
         self.trade.get_current_commission_list()
         return
 
     def get_one_stock(self):
+        """
+            select one stock
+        """
         result = self.stock_symbol_list[self.stock_process_index]
         self.stock_process_index += 1
         self.stock_process_index = \
@@ -68,6 +79,9 @@ class StockProcessor(object):
         return result
 
     def process_stock(self, stock_symbol):
+        """
+            process the stock
+        """
         # get remaining cash for the stock
         stock_cash_table = StockCashTable()
         stock_cash = stock_cash_table.get_stock_cash_by_symbol(stock_symbol)
@@ -78,7 +92,7 @@ class StockProcessor(object):
         print("remaining_cash={0}".format(stock_cash.amount))
         print("stock_price={0}".format(stock_price))
 
-        if(abs(stock_price) < 0.005):
+        if abs(stock_price) < 0.005:
             return
 
         stock_price_range_table = StockPriceRangeTable()
@@ -103,29 +117,30 @@ class StockProcessor(object):
 
         amount = int(suggested_amount/100) * 100
 
-        if (amount >= 100):
-            debug_msg = \
- "stock_symbol: {0}\nbuy_or_sell: {1}\namount: {2}\nstock_price: {3}".format(
-                    stock_symbol,
-                    buy_or_sell,
-                    amount,
-                    stock_price)
+        if amount >= 100:
+            debug_msg = "stock_symbol: {0}\nbuy_or_sell: {1}\n" + \
+                        "amount: {2}\nstock_price: {3}"
+            debug_msg = debug_msg.format(
+                stock_symbol,
+                buy_or_sell,
+                amount,
+                stock_price)
             self.logger.debug(debug_msg)
 
-            if (buy_or_sell == "Buy"):
+            if buy_or_sell == "Buy":
                 commission_id = self.trade.buy_stock(
-                                     stock_symbol,
-                                     stock_price,
-                                     amount)
+                    stock_symbol,
+                    stock_price,
+                    amount)
                 time.sleep(3)
                 commission_state = self.trade.get_commission_state(
-                                                            commission_id)
-                if (commission_state != "已成"):
+                    commission_id)
+                if commission_state != "已成":
                     result = self.trade.cancel_commission(commission_id)
-                    if (result != 1):
+                    if result != 1:
                         commission_state = self.trade.get_commission_state(
-                                                                commission_id)
-                        if (commission_state == "已成"):
+                            commission_id)
+                        if commission_state == "已成":
                             complete_buy_transaction(stock_symbol,
                                                      stock_price,
                                                      amount)
@@ -137,7 +152,7 @@ class StockProcessor(object):
                     complete_buy_transaction(stock_symbol,
                                              stock_price,
                                              amount)
-            elif (buy_or_sell == "Sell"):
+            elif buy_or_sell == "Sell":
                 lowest_buy_price = StockTransaction.\
                                    get_lowest_buy_price(stock_symbol)
                 lowest_buy_price_quantity = StockTransaction.\
@@ -147,9 +162,11 @@ class StockProcessor(object):
                 if lowest_gain is None:
                     lowest_gain = 0.3
                 if stock_price - lowest_buy_price < lowest_gain:
-                    self.logger.debug(
-                        "stock_price is not high enough. {0} vs {1}".format(
-                            stock_price, lowest_buy_price))
+                    debug_msg = "stock_price is not high enough. {0} vs {1}"
+                    debug_msg = debug_msg.format(
+                        stock_price,
+                        lowest_buy_price)
+                    self.logger.debug(debug_msg)
                     return
                 if amount > lowest_buy_price_quantity:
                     amount = lowest_buy_price_quantity
@@ -160,12 +177,12 @@ class StockProcessor(object):
                 time.sleep(3)
                 commission_state = self.trade.get_commission_state(
                     commission_id)
-                if (commission_state != "已成"):
+                if commission_state != "已成":
                     result = self.trade.cancel_commission(commission_id)
-                    if (result != 1):
+                    if result != 1:
                         commission_state = self.trade.get_commission_state(
                             commission_id)
-                        if (commission_state == "已成"):
+                        if commission_state == "已成":
                             complete_sell_transaction(stock_symbol,
                                                       stock_price,
                                                       amount)
@@ -179,6 +196,5 @@ class StockProcessor(object):
                                               amount)
             else:
                 print("Error!")
-
 
         return
