@@ -4,6 +4,9 @@ Created on 2015年8月24日
 
 @author: Yi Zhang
 '''
+import time
+import logging
+
 from stock_db.db_stock import StockCashTable
 from stock_db.db_stock import StockCash
 from stock_db.db_stock import StockPriceRangeTable
@@ -14,9 +17,6 @@ from stock_db.db_utility import get_lowest_gain
 from .utility import \
     complete_buy_transaction, \
     complete_sell_transaction
-import datetime
-import time
-import logging
 
 from gtja.Trade import Trade
 from stock_holding_algorithm.simple_algorithm3 import SimpleAlgorithm
@@ -32,17 +32,19 @@ class StockProcessor(object):
         self.stock_symbol_list = []
         self.stock_process_index = 0
         self.trade = Trade(account_name, password)
-
         return
 
-        '''
-        Constructor
-        '''
     def login(self):
+        """
+            Login GTJA web system
+        """
         self.trade.login()
         return
 
     def close(self):
+        """
+            Close GTJA web system
+        """
         self.trade.close()
         return
 
