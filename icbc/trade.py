@@ -307,7 +307,29 @@ class Trade:
             "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
         total_price_xpath = \
             "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
+
         self.switch_to_main_right_frame()
+
+        submit_again_element = self.driver.find_element_by_xpath(
+            submit_again_xpath)
+        goback_element = self.driver.find_element_by_xpath(goback_xpath)
+
+        submit_again_href = submit_again_element.get_attribute("href")
+        goback_element_href = goback_element.get_attribute("href")
+
+        print(submit_again_href)
+        print(goback_element_href)
+        if submit_again_href.startswith("javascript:"):
+            submit_script = submit_again_href[11:]
+        else:
+            return False
+        if goback_element_href.startswith("javascript:"):
+            goback_script = goback_element_href[11:]
+        else:
+            return False
+        print(submit_script)
+        print(goback_script)
+
         total_price_element = self.driver.find_element_by_xpath(
             total_price_xpath)
         print(total_price_element.text)
@@ -320,17 +342,14 @@ class Trade:
         print(amount * price)
 
         if (total_price > amount * price):
-            goback_element = self.driver.find_element_by_xpath(goback_xpath)
-            goback_element.click()
+            self.driver.execute_script(goback_script)
             return False
         #else:
         #    goback_element = self.driver.find_element_by_xpath(goback_xpath)
         #    goback_element.click()
         #    return True
 
-        submit_again_element = self.driver.find_element_by_xpath(
-            submit_again_xpath)
-        submit_again_element.click()
+        self.driver.execute_script(submit_script)
 
         self.switch_to_main_right_frame()
         complete_xpath = \
@@ -374,6 +393,27 @@ class Trade:
             "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
 
         self.switch_to_main_right_frame()
+
+        submit_again_element = self.driver.find_element_by_xpath(
+            submit_again_xpath)
+        goback_element = self.driver.find_element_by_xpath(goback_xpath)
+
+        submit_again_href = submit_again_element.get_attribute("href")
+        goback_element_href = goback_element.get_attribute("href")
+
+        print(submit_again_href)
+        print(goback_element_href)
+        if submit_again_href.startswith("javascript:"):
+            submit_script = submit_again_href[11:]
+        else:
+            return False
+        if goback_element_href.startswith("javascript:"):
+            goback_script = goback_element_href[11:]
+        else:
+            return False
+        print(submit_script)
+        print(goback_script)
+
         total_price_element = self.driver.find_element_by_xpath(
             total_price_xpath)
         print(total_price_element.text)
@@ -382,18 +422,16 @@ class Trade:
         total_price_string = m.group()
         total_price_string = total_price_string.replace(",", "")
         total_price = float(total_price_string)
+
         if(total_price < amount * price):
-            goback_element = self.driver.find_element_by_xpath(goback_xpath)
-            goback_element.click()
+            self.driver.execute_script(goback_script)
             return False
         #else:
         #    goback_element = self.driver.find_element_by_xpath(goback_xpath)
         #    goback_element.click()
         #    return True
 
-        submit_again_element = self.driver.find_element_by_xpath(
-            submit_again_xpath)
-        submit_again_element.click()
+        self.driver.execute_script(submit_script)
 
         self.switch_to_main_right_frame()
         complete_xpath = \
