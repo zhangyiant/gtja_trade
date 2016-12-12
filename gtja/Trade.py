@@ -431,13 +431,30 @@ class Trade:
                         price = float(column_elements[6].text)
                     current_commission_info.\
                         amount = int(float(column_elements[7].text))
+
                     datetime_string = column_elements[8].text
-                    year = int(datetime_string[0:4])
-                    month = int(datetime_string[4:6])
-                    day = int(datetime_string[6:8])
-                    hour = int(datetime_string[8:10])
-                    minute = int(datetime_string[10:12])
-                    second = int(datetime_string[12:14])
+                    if len(datetime_string) == 15:
+                        year = int(datetime_string[0:4])
+                        month = int(datetime_string[4:6])
+                        day = int(datetime_string[6:8])
+                        hour = int(datetime_string[8:9])
+                        minute = int(datetime_string[9:11])
+                        second = int(datetime_string[11:13])
+                    elif len(datetime_string) == 16：
+                        year = int(datetime_string[0:4])
+                        month = int(datetime_string[4:6])
+                        day = int(datetime_string[6:8])
+                        hour = int(datetime_string[8:10])
+                        minute = int(datetime_string[10:12])
+                        second = int(datetime_string[12:14])
+                    else:
+                        year = 1900
+                        month = 1
+                        day = 1
+                        hour = 0
+                        minute = 0
+                        second = 0
+
                     try:
                         current_commission_info.\
                             datetime = datetime(
