@@ -440,7 +440,7 @@ class Trade:
                         hour = int(datetime_string[8:9])
                         minute = int(datetime_string[9:11])
                         second = int(datetime_string[11:13])
-                    elif len(datetime_string) == 16：
+                    elif len(datetime_string) == 16:
                         year = int(datetime_string[0:4])
                         month = int(datetime_string[4:6])
                         day = int(datetime_string[6:8])
