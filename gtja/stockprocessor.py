@@ -1,4 +1,3 @@
-
 '''
 Created on 2015年8月24日
 
@@ -13,6 +12,7 @@ from stock_db.db_stock import StockPriceRangeTable
 from stock_db.db_stock import StockPriceRange
 from stock_db.db_stock import StockTransactionTable
 from stock_db.db_stock import StockTransaction
+from stock_db.db_stock import StockLowestUnitTable
 from stock_db.db_utility import get_lowest_gain
 from .utility import \
     complete_buy_transaction, \
@@ -115,9 +115,23 @@ class StockProcessor(object):
             suggested_amount)
         print(result)
 
-        amount = int(suggested_amount/100) * 100
+        stock_lowest_unit_table = StockLowestUnitTable()
+        stock_lowest_unit = stock_lowest_unit_table.\
+                            get_lowest_unit(stock_symbol)
+        if stock_lowest_unit is not None:
+            lowest_unit = stock_lowest_unit.lowest_unit
+            is_integer = stock_lowest_unit.is_integer
+        else:
+            lowest_unit = 100
+            is_integer = True
 
-        if amount >= 100:
+        if is_integer:
+            amount = int(suggested_amount / lowest_unit) * int(lowest_unit)
+        else:
+            amount = int(suggested_amount / lowest_unit) * lowest_unit
+
+        print(amount)
+        if amount >= lowest_unit:
             debug_msg = "stock_symbol: {0}\nbuy_or_sell: {1}\n" + \
                         "amount: {2}\nstock_price: {3}"
             debug_msg = debug_msg.format(

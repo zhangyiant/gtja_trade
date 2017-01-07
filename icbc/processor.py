@@ -11,7 +11,8 @@ from selenium.common.exceptions import \
 from .trade import Trade
 from stock_db.db_stock import \
     StockTransaction, \
-    StockPriceRangeTable
+    StockPriceRangeTable, \
+    StockLowestUnitTable
 from stock_db.db_utility import \
     get_lowest_gain
 from stock_holding_algorithm.simple_algorithm2 import SimpleAlgorithm
@@ -121,9 +122,25 @@ class NobleMetalProcessor:
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
         if (buy_or_sell is not None) and (buy_or_sell == "Buy"):
-            amount = algorithm.get_suggested_amount()
-            print("buy {0}, price: {1}, amount: {2}".\
-                  format(noble_metal_name, buy_price, amount))
+            suggested_amount = algorithm.get_suggested_amount()
+            print("buy {0}, price: {1}, suggested_amount: {2}".\
+                  format(noble_metal_name, buy_price, suggested_amount))
+
+            stock_lowest_unit_table = StockLowestUnitTable()
+            stock_lowest_unit = stock_lowest_unit_table.\
+                                get_lowest_unit(noble_metal_name)
+            if stock_lowest_unit is not None:
+                lowest_unit = stock_lowest_unit.lowest_unit
+                is_integer = stock_lowest_unit.is_integer
+            else:
+                lowest_unit = 1
+                is_integer = True
+
+            if is_integer:
+                amount = int(suggested_amount / lowest_unit) * int(lowest_unit)
+            else:
+                amount = int(suggested_amount / lowest_unit) * lowest_unit
+
             result = self.trade.buy_noble_metal(noble_metal_name,
                                                 amount,
                                                 buy_price)
@@ -154,7 +171,22 @@ class NobleMetalProcessor:
             print(lowest_gain)
             if sell_price - lowest_price < lowest_gain:
                 return
-            amount = algorithm.get_suggested_amount()
+            suggested_amount = algorithm.get_suggested_amount()
+
+            stock_lowest_unit_table = StockLowestUnitTable()
+            stock_lowest_unit = stock_lowest_unit_table.\
+                                get_lowest_unit(noble_metal_name)
+            if stock_lowest_unit is not None:
+                lowest_unit = stock_lowest_unit.lowest_unit
+                is_integer = stock_lowest_unit.is_integer
+            else:
+                lowest_unit = 1
+                is_integer = True
+            if is_integer:
+                amount = int(suggested_amount / lowest_unit) * int(lowest_unit)
+            else:
+                amount = int(suggested_amount / lowest_unit) * lowest_unit
+
             quantity = StockTransaction.\
                        get_lowest_buy_price_quantity(noble_metal_name)
             if amount >= quantity:
