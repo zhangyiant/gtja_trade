@@ -6,7 +6,6 @@ from gtja.utility import complete_sell_transaction;
     
 import stock_db
 
-
 STOCK_SYMBOL = sys.argv[1]
 SELL_PRICE = float(sys.argv[2])
 QUANTITY = int(sys.argv[3])
