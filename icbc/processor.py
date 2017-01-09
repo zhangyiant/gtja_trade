@@ -143,6 +143,9 @@ class NobleMetalProcessor:
                 amount = int(suggested_amount / lowest_unit) * lowest_unit
 
             print(amount)
+            if amount < lowest_unit:
+                return
+
             result = self.trade.buy_noble_metal(noble_metal_name,
                                                 amount,
                                                 buy_price)
