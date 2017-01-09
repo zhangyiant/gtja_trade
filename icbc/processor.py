@@ -121,6 +121,7 @@ class NobleMetalProcessor:
         algorithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
+        print("Buy_or_sell: {0}".format(buy_or_sell))
         if (buy_or_sell is not None) and (buy_or_sell == "Buy"):
             suggested_amount = algorithm.get_suggested_amount()
             print("buy {0}, price: {1}, suggested_amount: {2}".\
@@ -141,6 +142,7 @@ class NobleMetalProcessor:
             else:
                 amount = int(suggested_amount / lowest_unit) * lowest_unit
 
+            print(amount)
             result = self.trade.buy_noble_metal(noble_metal_name,
                                                 amount,
                                                 buy_price)
@@ -162,6 +164,7 @@ class NobleMetalProcessor:
         algorithm.calculate()
 
         buy_or_sell = algorithm.get_suggested_buy_or_sell()
+        print("Buy_or_sell: {0}".format(buy_or_sell))
         if (buy_or_sell is not None) and (buy_or_sell == "Sell"):
             lowest_price = StockTransaction.\
                            get_lowest_buy_price(noble_metal_name)
@@ -187,8 +190,12 @@ class NobleMetalProcessor:
             else:
                 amount = int(suggested_amount / lowest_unit) * lowest_unit
 
+            print(suggested_amount)
+            print(amount)
             quantity = StockTransaction.\
                        get_lowest_buy_price_quantity(noble_metal_name)
+            if amount < lowest_unit:
+                return
             if amount >= quantity:
                 amount = quantity
 
