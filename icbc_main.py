@@ -31,7 +31,12 @@ stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 if __name__ == '__main__':
     noble_metal_processor = NobleMetalProcessor()
-    noble_metal_processor.set_noble_metal_name_list(["人民币账户白银","人民币账户黄金", "人民币账户钯金", "人民币账户铂金"])
+    noble_metal_processor.set_noble_metal_name_list(
+        ["人民币账户白银",
+         "人民币账户黄金",
+         "人民币账户钯金",
+         "人民币账户铂金",
+         "美元账户白银"])
     noble_metal_processor.login()
     t = 10
     while True:
