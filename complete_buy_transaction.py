@@ -2,12 +2,13 @@ import configparser
 import logging
 import sys
 from gtja.stockprocessor import StockProcessor
-from gtja.utility import complete_sell_transaction;
+from gtja.utility import complete_buy_transaction;
     
 import stock_db
 
+
 STOCK_SYMBOL = sys.argv[1]
-SELL_PRICE = float(sys.argv[2])
+BUY_PRICE = float(sys.argv[2])
 QUANTITY = int(sys.argv[3])
 
 # read configuration
@@ -32,7 +33,7 @@ LOGGER.addHandler(FH)
 stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 print(STOCK_SYMBOL)
-print(SELL_PRICE)
+print(BUY_PRICE)
 print(QUANTITY)
-complete_sell_transaction(STOCK_SYMBOL, SELL_PRICE, QUANTITY)
+complete_buy_transaction(STOCK_SYMBOL, BUY_PRICE, QUANTITY)
 
