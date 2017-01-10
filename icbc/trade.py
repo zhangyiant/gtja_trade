@@ -302,12 +302,15 @@ class Trade:
         script = "form_submit()"
         self.driver.execute_script(script)
 
-        submit_again_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[1]"
-        goback_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
-        total_price_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
+        xpath_prefix = "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/"
+        if "美元" in name:
+            submit_again_xpath = xpath_prefix + "tr[9]/td/div/a[1]"
+            goback_xpath = xpath_prefix + "tr[9]/td/div/a[2]"
+            total_price_xpath = xpath_prefix + "tr[7]/td[2]/span"
+        else:
+            submit_again_xpath = xpath_prefix + "tr[8]/td/div/a[1]"
+            goback_xpath = xpath_prefix + "tr[8]/td/div/a[2]"
+            total_price_xpath = xpath_prefix + "tr[6]/td[2]/span"
 
         self.switch_to_main_right_frame()
 
@@ -386,12 +389,15 @@ class Trade:
         script = "form_submit()"
         self.driver.execute_script(script)
 
-        submit_again_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[1]"
-        goback_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[8]/td/div/a[2]"
-        total_price_xpath = \
-            "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/tr[6]/td[2]/span"
+        xpath_prefix = "/html/body/table/tbody/tr/td/form[2]/table[2]/tbody/"
+        if "美元" in name:
+            submit_again_xpath = xpath_prefix + "tr[9]/td/div/a[1]"
+            goback_xpath = xpath_prefix + "tr[9]/td/div/a[2]"
+            total_price_xpath = xpath_prefix + "tr[7]/td[2]/span"
+        else:
+            submit_again_xpath = xpath_prefix + "tr[8]/td/div/a[1]"
+            goback_xpath = xpath_prefix + "tr[8]/td/div/a[2]"
+            total_price_xpath = xpath_prefix + "tr[6]/td[2]/span"
 
         self.switch_to_main_right_frame()
 
