@@ -66,7 +66,7 @@ class Trade:
     def main_page(self):
         self.logger.debug("main_page")
         self.driver.switch_to_default_content()
-        logo_xpath = "/html/body/boby/div[4]/div/div/img"
+        logo_xpath = "/html/body/boby/div[3]/div/div/img"
         logo_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, logo_xpath)))
         logo_element.click()
