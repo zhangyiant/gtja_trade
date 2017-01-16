@@ -90,6 +90,16 @@ class NobleMetalProcessor:
                 raise NobleMetalProcessorException("WebDriver Exception")
             time.sleep(10)
             return
+        except Exception as exc:
+            error_msg = "Exception {0}"
+            error_msg = error_msg.format(exc)
+            self.logger.error(error_msg)
+            print(error_msg)
+            self.error_counter += 1
+            if self.error_counter > 10:
+                raise NobleMetalProcessorException("Unknown Exception")
+            time.sleep(10)
+            return
 
         # reset counter
         self.error_counter = 0
