@@ -66,9 +66,14 @@ class Trade:
     def main_page(self):
         self.logger.debug("main_page")
         self.driver.switch_to_default_content()
+
+        script = "window.scrollTo(0,0)"
+        self.driver.execute_script(script)
+
         logo_xpath = "/html/body/boby/div[3]/div/div/img"
         logo_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, logo_xpath)))
+        print(logo_element)
         logo_element.click()
 
         #script = "javascript:logPV('PBL200202');"
