@@ -7,6 +7,7 @@ from gtja.utility import complete_buy_transaction;
 import stock_db
 
 
+
 STOCK_SYMBOL = sys.argv[1]
 BUY_PRICE = float(sys.argv[2])
 QUANTITY = int(sys.argv[3])
