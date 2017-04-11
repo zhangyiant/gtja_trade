@@ -3,7 +3,7 @@ import logging
 import sys
 from gtja.stockprocessor import StockProcessor
 from gtja.utility import complete_buy_transaction;
-    
+
 import stock_db
 
 
