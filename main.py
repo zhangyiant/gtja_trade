@@ -18,7 +18,10 @@ CONFIG_PARSER.read("gtja_trade.ini", encoding="utf-8")
 ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
 PASSWORD = CONFIG_PARSER['Account'].get('password')
 CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
-LOGGING_FILENAME = CONFIG_PARSER['Logging'].get('filename')
+LOGGING_PATH = CONFIG_PARSER["Logging"].get("path")
+LOGGING_FILENAME = LOGGING_PATH + "/" + \
+                   datetime.datetime.now().strftime("%Y%m%d") + ".log"
+
 
 # logger setup
 LOGGER = logging.getLogger()
@@ -36,7 +39,6 @@ LOGGER.addHandler(FH)
 # set the DB connection string
 stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
-#commission_id = trade.get_last_commission_id("601398", 100)
 
 STOCK_PROCESSOR = StockProcessor(ACCOUNT_NAME, PASSWORD)
 print(ACCOUNT_NAME, PASSWORD)
@@ -100,11 +102,6 @@ while True:
     STOCK_PROCESSOR.process_stock(STOCK_SYMBOL)
     time.sleep(59)
 
-#    commission_id = STOCK_PROCESSOR.trade.buy_stock("601398", 4.20, 100)
-#    STOCK_PROCESSOR.trade.cancel_commission(216527)
-#    print(commission_id)
-
-#commission_id = trade.sell_stock("601398", 5.12, 200)
 
 
 STOCK_PROCESSOR.close()
