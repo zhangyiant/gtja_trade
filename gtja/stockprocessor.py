@@ -18,7 +18,7 @@ from .utility import \
     complete_buy_transaction, \
     complete_sell_transaction
 
-from gtja.Trade import Trade
+from .trade import Trade
 from stock_holding_algorithm.simple_algorithm3 import SimpleAlgorithm
 
 class StockProcessor(object):
