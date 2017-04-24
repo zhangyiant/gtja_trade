@@ -47,18 +47,3 @@ if __name__ == '__main__':
         noble_metal_processor.process_noble_metal(noble_metal_name)
 
     noble_metal_processor.close()
-    
-    
-    #trade = Trade()
-    #trade.login()
-    #trade.select_noble_metal()
-    #t = trade.buy_noble_metal("人民币账户白银", 1, 3)
-    #print(t)
-    #trade.select_noble_metal()
-    #t = trade.sell_noble_metal("人民币账户白银", 1, 2)
-    #print(t)
-    
-    #noble_metal_price = trade.get_noble_metal_price("人民币账户白银")
-    #print(noble_metal_price)
-    #time.sleep(10)
-    #trade.close()
