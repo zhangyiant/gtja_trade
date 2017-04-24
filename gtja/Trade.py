@@ -102,7 +102,7 @@ class Trade:
         self.username = username
         self.password = password
         self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(10)
+        #self.driver.implicitly_wait(10)
         return
 
     def is_alert_present(self):
@@ -223,19 +223,19 @@ class Trade:
         return
     
     def select_main_frame(self):
-        
+
         # wait the main frame is ready
         self.driver.switch_to.default_content()
-        element = WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 10).until(
             EC.frame_to_be_available_and_switch_to_it((By.NAME, "mainFrame"))
             )
-        
+
         # switch to the main frame
         self.driver.switch_to.default_content()
         main_frame = self.driver.find_element_by_name("mainFrame")
         self.driver.switch_to.frame(main_frame)
         return
-    
+
     def select_top_frame(self):
         self.driver.switch_to.default_content()
         top_frame = self.driver.find_element_by_name("topFrame")
@@ -278,7 +278,9 @@ class Trade:
         time.sleep(3)
         
         self.select_main_frame()
-        element = self.driver.find_element_by_xpath(symbol_input_xpath)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, symbol_input_xpath)))
+        self.driver.find_element_by_xpath(symbol_input_xpath)
         element.send_keys(symbol)
         time.sleep(3)
         element = self.driver.find_element_by_xpath(refresh_xpath)

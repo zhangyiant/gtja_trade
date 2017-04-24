@@ -66,9 +66,14 @@ class Trade:
     def main_page(self):
         self.logger.debug("main_page")
         self.driver.switch_to_default_content()
+
+        script = "window.scrollTo(0,0)"
+        self.driver.execute_script(script)
+
         logo_xpath = "/html/body/boby/div[3]/div/div/img"
         logo_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, logo_xpath)))
+        print(logo_element)
         logo_element.click()
 
         #script = "javascript:logPV('PBL200202');"
@@ -334,6 +339,10 @@ class Trade:
         print(submit_script)
         print(goback_script)
 
+        if "买" not in submit_script:
+            self.driver.execute_script(goback_script)
+            return False
+
         total_price_element = self.driver.find_element_by_xpath(
             total_price_xpath)
         print(total_price_element.text)
@@ -379,9 +388,9 @@ class Trade:
         name_element = \
             main_table_element.find_element_by_xpath(name_xpath)
         name_element.send_keys(name)
-        buy_radio_element = \
+        sell_radio_element = \
             main_table_element.find_element_by_xpath(sell_radio_xpath)
-        buy_radio_element.click()
+        sell_radio_element.click()
         amount_element = \
             main_table_element.find_element_by_xpath(amount_xpath)
         amount_element.send_keys(str(amount))
@@ -420,6 +429,10 @@ class Trade:
             return False
         print(submit_script)
         print(goback_script)
+
+        if "卖" not in submit_script:
+            self.driver.execute_script(goback_script)
+            return False
 
         total_price_element = self.driver.find_element_by_xpath(
             total_price_xpath)
