@@ -24,9 +24,12 @@ LOGGING_FILENAME = CONFIG_PARSER['Logging'].get('filename')
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
-logging.getLogger('selenium.webdriver.remote.remote_connection').setLevel(logging.WARNING)
+logging.getLogger(
+    'selenium.webdriver.remote.remote_connection').setLevel(
+        logging.WARNING)
 FH = logging.FileHandler(LOGGING_FILENAME, encoding="utf-8")
-FORMATTER = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+FORMATTER = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 FH.setFormatter(FORMATTER)
 LOGGER.addHandler(FH)
 
