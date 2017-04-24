@@ -5,6 +5,7 @@ Created on 2016年1月18日
 '''
 import logging
 import configparser
+import datetime
 import time
 from icbc.trade import Trade
 from icbc.processor import NobleMetalProcessor
@@ -17,12 +18,14 @@ config.read("gtja_trade.ini", encoding="utf-8")
 account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
 CONNECTION_STRING = config['Database'].get('connection')
-logging_filename = config['Logging'].get('filename')
+LOGGING_PATH = config["Logging"].get("path")
+LOGGING_FILENAME = LOGGING_PATH + "/icbc" + \
+                   datetime.datetime.now().strftime("%Y%m%d") + ".log"
 
 # logger setup
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler(logging_filename, encoding="utf-8")
+fh = logging.FileHandler(LOGGING_FILENAME, encoding="utf-8")
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
