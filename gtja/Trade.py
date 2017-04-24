@@ -15,6 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoAlertPresentException
 from selenium.common.exceptions import TimeoutException
 
+
 class CurrentCommissionInfo:
     def __init__(self):
         self.shareholder_code = ""
@@ -28,7 +29,7 @@ class CurrentCommissionInfo:
         self.trade_volumn = 0
         self.trade_state = ""
         return
-    
+
     def __str__(self):
         result = "shareholder_code: " + self.shareholder_code
         result += ", commission_id: {0}".format(self.commission_id)
@@ -41,7 +42,8 @@ class CurrentCommissionInfo:
         result += ", trade_volumn: {0}".format(self.trade_volumn)
         result += ", trade_state: {0}".format(self.trade_state)
         return result
-    
+
+
 class StockInfo:
     def __init__(self):
         self.stock_symbol = ""
@@ -53,7 +55,7 @@ class StockInfo:
         self.cost = 0
         self.gain = 0
         return
-    
+
     def __str__(self):
         result = "stock_symbol: " + self.stock_symbol
         result += ",stock_name: " + self.stock_name
@@ -63,8 +65,9 @@ class StockInfo:
         result += ",price: {0}".format(self.price)
         result += ",cost: {0}".format(self.cost)
         result += ",gain: {0}".format(self.gain)
-        return result    
-    
+        return result
+
+
 class AccountInfo:
     def __init__(self):
         self.account_name = ""
@@ -76,7 +79,7 @@ class AccountInfo:
         self.total_value = 0
         self.bank_name = ""
         return
-    
+
     def __str__(self):
         result = "account_name: " + self.account_name
         result += ", currency: " + self.currency
@@ -87,6 +90,7 @@ class AccountInfo:
         result += ",total_value: {0}".format(self.total_value)
         result += ",bank_name: " + self.bank_name
         return result
+
 
 class Trade:
     '''
@@ -112,47 +116,47 @@ class Trade:
             return True
         except NoAlertPresentException:
             return False
-    
+
     def login(self):
         self.driver.get("http://trade.gtja.com")
         print(self.driver.title)
         element = self.driver.find_element_by_partial_link_text("标准")
         element.click()
-        
+
         time.sleep(3)
-        
+
         element = self.driver.find_element_by_name("BranchCode")
         element.send_keys("上海宜山路")
-        
+
         element = self.driver.find_element_by_name("inputid")
         element.send_keys(self.username)
-        
+
         element = self.driver.find_element_by_name("trdpwd")
         element.send_keys(self.password)
-        
+
         validation_code = input("Please input the validation code:\n")
         print("Validation code, ", validation_code)
-        
+
         element = self.driver.find_element_by_name("AppendCode")
         element.send_keys(validation_code)
-        
+
         element = self.driver.find_element_by_id("confirmBtn")
         element.click()
-        
+
         return
-    
+
     def get_stock_info_list(self):
-        
+
         self.enter_stock_menu()
 
         time.sleep(3)
 
         self.select_main_frame()
-        
+
         tbody_xpath = '//body/table[3]/tbody/tr/td/table[4]/tbody'
-        
+
         tbody_element = self.driver.find_element_by_xpath(tbody_xpath)
-        
+
         row_elements = tbody_element.find_elements_by_xpath("*")
 
         stock_info_list = []
@@ -168,28 +172,28 @@ class Trade:
             stock_info.cost = column_elements[7].text
             stock_info.gain = column_elements[8].text
             stock_info_list.append(stock_info)
-            
+
         return stock_info_list
-    
+
     def get_account_info(self):
-        
+
         # enter stock menu
         self.enter_stock_menu()
         time.sleep(3)
-        
+
         self.select_main_frame()
-        
+
         #element = driver.find_element_by_xpath("//body/table[3]")
         row_prefix = "//body/table[3]/tbody/tr/td/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[2]/td"
         account_xpath = row_prefix + "[1]"
         currency_xpath = row_prefix + "[2]"
         cash_balance_xpath = row_prefix + "[3]"
-        available_balance_xpath = row_prefix + "[4]" 
+        available_balance_xpath = row_prefix + "[4]"
         extactable_balance_xpath = row_prefix + "[5]"
         current_value_xpath = row_prefix + "[6]"
         total_value_xpath = row_prefix + "[7]"
         bank_name_xpath = row_prefix + "[8]"
-        
+
         account_info = AccountInfo()
         element = self.driver.find_element_by_xpath(account_xpath)
         account_info.account_name = element.text
@@ -207,21 +211,21 @@ class Trade:
         account_info.total_value = element.text
         element = self.driver.find_element_by_xpath(bank_name_xpath)
         account_info.bank_name = element.text
-        
+
         return account_info
-    
+
     def enter_stock_menu(self):
-        
+
         self.select_top_frame()
-        
+
         stock_menu_element = self.driver.find_element_by_xpath('//a[@title="股票"]')
-        
+
         print(stock_menu_element.text)
-        
+
         stock_menu_element.click()
-        
+
         return
-    
+
     def select_main_frame(self):
 
         # wait the main frame is ready
@@ -241,42 +245,42 @@ class Trade:
         top_frame = self.driver.find_element_by_name("topFrame")
         self.driver.switch_to.frame(top_frame)
         return
-    
+
     def select_left_frame(self):
         # wait the main frame is ready
         self.driver.switch_to.default_content()
         element = WebDriverWait(self.driver, 10).until(
             EC.frame_to_be_available_and_switch_to_it((By.NAME, "leftFrame"))
             )
-        
+
         # switch to left frame
         self.driver.switch_to.default_content()
         left_frame = self.driver.find_element_by_name("leftFrame")
         self.driver.switch_to.frame(left_frame)
         return
-    
+
     def select_menu_frame(self):
         self.select_left_frame()
-        
+
         element = WebDriverWait(self.driver, 10).until(
             EC.frame_to_be_available_and_switch_to_it((By.NAME, "menuiframe"))
             )
 #         menu_frame = self.driver.find_element_by_name("menuiframe")
 #         self.driver.switch_to.frame(menu_frame)
         return
-        
+
     def get_stock_price(self, symbol):
         symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
         refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
         price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[4]/td[2]"
-        
+
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
         element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
         element.click()
         time.sleep(3)
-        
+
         self.select_main_frame()
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, symbol_input_xpath)))
@@ -286,21 +290,21 @@ class Trade:
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
         time.sleep(3)
-        
+
         # wait the price is not 0
         WebDriverWait(self.driver, 10).until_not(
             EC.text_to_be_present_in_element_value((By.XPATH, price_xpath), "0")
             )
 
         element = self.driver.find_element_by_xpath(price_xpath)
-        
+
         if element.text == "0":
             self.logger.critical("Price is 0")
 
         price = float(element.text)
-        
+
         return price
-    
+
     def get_commission_state(self, commission_id):
         commission_list = self.get_current_commission_list()
         found = False
@@ -353,7 +357,7 @@ class Trade:
                 # we find the row
                 found = True
                 break
-        
+
         result = 0
         if found:
             if row_commission_state == "已成" or \
@@ -492,35 +496,35 @@ class Trade:
         buy_amount_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[10]/td[2]/input"
         buy_button_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[2]/tbody/tr/td[2]/table/tbody/tr/td[1]/table/tbody/tr/td/input"
         normal_delegate_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[5]/td[2]/input[1]"
-        
+
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
         element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
         element.click()
         time.sleep(5)
-        
+
         self.select_main_frame()
         element = self.driver.find_element_by_xpath(symbol_input_xpath)
         element.send_keys(symbol)
-        
+
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
         time.sleep(3)
-        
+
         element = self.driver.find_element_by_xpath(normal_delegate_xpath)
         element.click()
-        
+
         element = self.driver.find_element_by_xpath(buy_price_xpath)
         element.clear()
         element.send_keys("{0}".format(price))
-        
+
         element = self.driver.find_element_by_xpath(buy_amount_xpath)
         element.send_keys("{0}".format(amount))
-        
+
         element = self.driver.find_element_by_xpath(buy_button_xpath)
         element.click()
-        
+
         if (self.is_alert_present()):
             alert = self.driver.switch_to.alert
             print(alert.text)
@@ -532,9 +536,9 @@ class Trade:
 
         curr_datetime = datetime.now()
         print(curr_datetime)
-        
+
         commission_id = self.get_last_commission_id(symbol, amount)
-        
+
         print(commission_id)
 
         if commission_id is None:
