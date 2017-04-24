@@ -19,7 +19,7 @@ ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
 PASSWORD = CONFIG_PARSER['Account'].get('password')
 CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
 LOGGING_PATH = CONFIG_PARSER["Logging"].get("path")
-LOGGING_FILENAME = LOGGING_PATH + "/" + \
+LOGGING_FILENAME = LOGGING_PATH + "/stock" + \
                    datetime.datetime.now().strftime("%Y%m%d") + ".log"
 
 
