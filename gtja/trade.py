@@ -402,6 +402,9 @@ class Trade:
 
                 time.sleep(3)
 
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, curr_commission_xpath)))
                 element = self.driver.find_element_by_xpath(
                     curr_commission_xpath)
                 element.click()
