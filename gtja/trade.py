@@ -284,7 +284,7 @@ class Trade:
         self.select_main_frame()
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, symbol_input_xpath)))
-        self.driver.find_element_by_xpath(symbol_input_xpath)
+        element = self.driver.find_element_by_xpath(symbol_input_xpath)
         element.send_keys(symbol)
         time.sleep(3)
         element = self.driver.find_element_by_xpath(refresh_xpath)
@@ -402,6 +402,9 @@ class Trade:
 
                 time.sleep(3)
 
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, curr_commission_xpath)))
                 element = self.driver.find_element_by_xpath(
                     curr_commission_xpath)
                 element.click()
