@@ -501,17 +501,33 @@ class Trade:
         return current_commission_list
 
     def buy_stock(self, symbol, price, amount):
-        symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
-        refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
-        buy_price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[7]/td[2]/input"
-        buy_amount_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[10]/td[2]/input"
-        buy_button_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[2]/tbody/tr/td[2]/table/tbody/tr/td[1]/table/tbody/tr/td/input"
-        normal_delegate_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[5]/td[2]/input[1]"
+        symbol_input_xpath = "/html/body/form/table[3]/" \
+                             "tbody/tr/td[1]/table/tbody/" \
+                             "tr/td/table[2]/tbody/tr/td/" \
+                             "table[1]/tbody/tr[1]/td[2]/input"
+        refresh_xpath = "/html/body/form/table[3]/tbody/" \
+                        "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                        "tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
+        buy_price_xpath = "/html/body/form/table[3]/tbody/" \
+                          "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                          "tbody/tr/td/table[1]/tbody/tr[7]/td[2]/input"
+        buy_amount_xpath = "/html/body/form/table[3]/tbody/" \
+                           "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                           "tbody/tr/td/table[1]/tbody/tr[10]/td[2]/input"
+        buy_button_xpath = "/html/body/form/table[3]/tbody/" \
+                           "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                           "tbody/tr/td/table[2]/tbody/tr/td[2]/" \
+                           "table/tbody/tr/td[1]/table/tbody/tr/td/input"
+        normal_delegate_xpath = "/html/body/form/table[3]/tbody/" \
+                                "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                                "tbody/tr/td/table[1]/tbody/" \
+                                "tr[5]/td[2]/input[1]"
 
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
-        element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[1]/td/a")
+        element = self.driver.find_element_by_xpath(
+            "/html/body/table[2]/tbody/tr[1]/td/a")
         element.click()
         time.sleep(5)
 
@@ -557,41 +573,56 @@ class Trade:
         return commission_id
 
     def sell_stock(self, symbol, price, amount):
-        symbol_input_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
-        refresh_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
-        sell_price_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[6]/td[2]/input"
-        sell_amount_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[8]/td[2]/input"
-        sell_button_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[2]/tbody/tr/td[2]/table/tbody/tr/td[1]/table/tbody/tr/td/input"
-        normal_delegate_xpath = "/html/body/form/table[3]/tbody/tr/td[1]/table/tbody/tr/td/table[2]/tbody/tr/td/table[1]/tbody/tr[4]/td[2]/input[1]"
+        symbol_input_xpath = "/html/body/form/table[3]/tbody/" \
+                             "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                             "tbody/tr/td/table[1]/tbody/tr[1]/td[2]/input"
+        refresh_xpath = "/html/body/form/table[3]/tbody/" \
+                        "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                        "tbody/tr/td/table[1]/tbody/tr[1]/td[2]/span/a"
+        sell_price_xpath = "/html/body/form/table[3]/tbody/" \
+                           "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                           "tbody/tr/td/table[1]/tbody/tr[6]/td[2]/input"
+        sell_amount_xpath = "/html/body/form/table[3]/tbody/" \
+                            "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                            "tbody/tr/td/table[1]/tbody/tr[8]/td[2]/input"
+        sell_button_xpath = "/html/body/form/table[3]/tbody/" \
+                            "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                            "tbody/tr/td/table[2]/tbody/tr/td[2]/" \
+                            "table/tbody/tr/td[1]/table/tbody/tr/td/input"
+        normal_delegate_xpath = "/html/body/form/table[3]/tbody/" \
+                                "tr/td[1]/table/tbody/tr/td/table[2]/" \
+                                "tbody/tr/td/table[1]/tbody/" \
+                                "tr[4]/td[2]/input[1]"
 
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
-        element = self.driver.find_element_by_xpath("/html/body/table[2]/tbody/tr[2]/td/a")
+        element = self.driver.find_element_by_xpath(
+            "/html/body/table[2]/tbody/tr[2]/td/a")
         element.click()
         time.sleep(3)
-        
+
         self.select_main_frame()
         element = self.driver.find_element_by_xpath(symbol_input_xpath)
         element.send_keys(symbol)
-        
+
         element = self.driver.find_element_by_xpath(refresh_xpath)
         element.click()
         time.sleep(3)
-        
+
         element = self.driver.find_element_by_xpath(normal_delegate_xpath)
         element.click()
-        
+
         element = self.driver.find_element_by_xpath(sell_price_xpath)
         element.clear()
         element.send_keys("{0}".format(price))
-        
+
         element = self.driver.find_element_by_xpath(sell_amount_xpath)
         element.send_keys("{0}".format(amount))
-        
+
         element = self.driver.find_element_by_xpath(sell_button_xpath)
         element.click()
-         
+
         if (self.is_alert_present()):
             alert = self.driver.switch_to.alert
             print(alert.text)
@@ -600,12 +631,12 @@ class Trade:
                 alert = self.driver.switch_to.alert
                 print(alert.text)
                 alert.accept()
- 
+
         curr_datetime = datetime.now()
         print(curr_datetime)
-         
+
         commission_id = self.get_last_commission_id(symbol, amount)
-         
+
         print(commission_id)
 
         if commission_id is None:
