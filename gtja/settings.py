@@ -18,7 +18,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.handlers.TimedRotatingFileHandler",
             "formatter": "verbose",
-            "filename": "stock.log",
+            "filename": "o:/log/stock.log",
             "when": "D",
         }
     },
