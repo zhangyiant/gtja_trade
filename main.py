@@ -25,8 +25,6 @@ LOGGING_PATH = CONFIG_PARSER["Logging"].get("path")
 logging.config.dictConfig(LOGGING)
 
 # logger setup
-LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.DEBUG)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger(
     'selenium.webdriver.remote.remote_connection').setLevel(
@@ -37,7 +35,7 @@ stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 
 STOCK_PROCESSOR = StockProcessor(ACCOUNT_NAME, PASSWORD)
-print(ACCOUNT_NAME, PASSWORD)
+logging.info(ACCOUNT_NAME, PASSWORD)
 
 STOCK_PROCESSOR.login()
 
@@ -81,15 +79,15 @@ def is_market_closed():
 while True:
 
     T = datetime.datetime.now()
-    print(T)
+    logging.debug(T)
 
     # check time
     if is_market_closed():
-        print("market is closed!")
+        logging.info("market is closed!")
         break
 
     if not is_transaction_time():
-        print("It's not transaction time now!")
+        logging.info("It's not transaction time now!")
         STOCK_PROCESSOR.keep_alive()
         time.sleep(60)
         continue
@@ -97,7 +95,5 @@ while True:
     STOCK_SYMBOL = STOCK_PROCESSOR.get_one_stock()
     STOCK_PROCESSOR.process_stock(STOCK_SYMBOL)
     time.sleep(59)
-
-
 
 STOCK_PROCESSOR.close()

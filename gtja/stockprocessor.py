@@ -21,13 +21,14 @@ from .utility import \
 from .trade import Trade
 from stock_holding_algorithm.simple_algorithm3 import SimpleAlgorithm
 
+logger = logging.getLogger(__name__)
+
 class StockProcessor(object):
     '''
     classdocs
     '''
 
     def __init__(self, account_name, password):
-        self.logger = logging.getLogger(__name__)
         self.stock_symbol_list = []
         self.stock_process_index = 0
         self.trade = Trade(account_name, password)
@@ -88,9 +89,9 @@ class StockProcessor(object):
         # get current price of the stock
         stock_price = self.trade.get_stock_price(stock_symbol)
 
-        print("process stock: " + stock_symbol)
-        print("remaining_cash={0}".format(stock_cash.amount))
-        print("stock_price={0}".format(stock_price))
+        logger.info("process stock: " + stock_symbol)
+        logger.info("remaining_cash={0}".format(stock_cash.amount))
+        logger.info("stock_price={0}".format(stock_price))
 
         if abs(stock_price) < 0.005:
             return
@@ -113,7 +114,7 @@ class StockProcessor(object):
             stock_symbol,
             buy_or_sell,
             suggested_amount)
-        print(result)
+        logger.debug(result)
 
         stock_lowest_unit_table = StockLowestUnitTable()
         stock_lowest_unit = stock_lowest_unit_table.\
@@ -130,7 +131,7 @@ class StockProcessor(object):
         else:
             amount = int(suggested_amount / lowest_unit) * lowest_unit
 
-        print(amount)
+        logger.debug(amount)
         if amount >= lowest_unit:
             debug_msg = "stock_symbol: {0}\nbuy_or_sell: {1}\n" + \
                         "amount: {2}\nstock_price: {3}"
@@ -139,7 +140,7 @@ class StockProcessor(object):
                 buy_or_sell,
                 amount,
                 stock_price)
-            self.logger.debug(debug_msg)
+            logger.debug(debug_msg)
 
             if buy_or_sell == "Buy":
                 commission_id = self.trade.buy_stock(
@@ -159,9 +160,8 @@ class StockProcessor(object):
                                                      stock_price,
                                                      amount)
                         else:
-                            print("Unknown error in canceling transaction")
-                            self.logger.debug(
-                                "Unknown error in canceling transaction.")
+                            logger.debug(
+                                "Unknown error in canceling transaction")
                 else:
                     complete_buy_transaction(stock_symbol,
                                              stock_price,
@@ -180,7 +180,7 @@ class StockProcessor(object):
                     debug_msg = debug_msg.format(
                         stock_price,
                         lowest_buy_price)
-                    self.logger.debug(debug_msg)
+                    logger.debug(debug_msg)
                     return
                 if amount > lowest_buy_price_quantity:
                     amount = lowest_buy_price_quantity
@@ -201,8 +201,7 @@ class StockProcessor(object):
                                                       stock_price,
                                                       amount)
                         else:
-                            print("Unknown error in canceling transaction")
-                            self.logger.debug(
+                            logger.debug(
                                 "Unknown error in canceling transaction.")
                 else:
                     complete_sell_transaction(stock_symbol,
