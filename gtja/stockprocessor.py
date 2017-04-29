@@ -7,10 +7,7 @@ import time
 import logging
 
 from stock_db.db_stock import StockCashTable
-from stock_db.db_stock import StockCash
 from stock_db.db_stock import StockPriceRangeTable
-from stock_db.db_stock import StockPriceRange
-from stock_db.db_stock import StockTransactionTable
 from stock_db.db_stock import StockTransaction
 from stock_db.db_stock import StockLowestUnitTable
 from stock_db.db_utility import get_lowest_gain
@@ -66,7 +63,6 @@ class StockProcessor(object):
         """
             keep alive method
         """
-        #self.trade.enter_stock_menu()
         self.trade.get_current_commission_list()
         return
 
@@ -119,7 +115,7 @@ class StockProcessor(object):
 
         stock_lowest_unit_table = StockLowestUnitTable()
         stock_lowest_unit = stock_lowest_unit_table.\
-                            get_lowest_unit(stock_symbol)
+            get_lowest_unit(stock_symbol)
         if stock_lowest_unit is not None:
             lowest_unit = stock_lowest_unit.lowest_unit
             is_integer = stock_lowest_unit.is_integer
@@ -171,8 +167,8 @@ class StockProcessor(object):
                 lowest_buy_price = StockTransaction.\
                                    get_lowest_buy_price(stock_symbol)
                 lowest_buy_price_quantity = StockTransaction.\
-                                            get_lowest_buy_price_quantity(
-                                                stock_symbol)
+                    get_lowest_buy_price_quantity(
+                        stock_symbol)
                 lowest_gain = get_lowest_gain(stock_symbol)
                 if lowest_gain is None:
                     lowest_gain = 0.3
