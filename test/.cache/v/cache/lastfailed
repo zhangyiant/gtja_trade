@@ -1,0 +1,6 @@
+{
+  "test_stock_db_connection.py::StockDbConnectionTest::test_reset_table": true,
+  "test_stock_db_connection.py::StockDbConnectionTest::test_stock_cash_sanity": true,
+  "test_stock_db_connection.py::StockDbConnectionTest::test_stock_transaction_sanity": true,
+  "test_stock_table.py::StockClosedTransactionTableTest::test_stock_closed_transaction_sanity": true
+}

@@ -10,9 +10,7 @@ import configparser
 if __name__ == '__main__':
     # read configuration
     config = configparser.ConfigParser()
-    config.read("gtja_trade.ini", encoding="utf-8")
-    account_name = config['Account'].get('account_name')
-    password = config['Account'].get('password')
+    config.read("stock.ini", encoding="utf-8")
     connection_string = config['Database'].get('connection')
     
     # set the DB connection string
