@@ -7,7 +7,9 @@ import time
 import datetime
 import configparser
 import logging
+import logging.config
 
+from gtja.settings import LOGGING
 from gtja.stockprocessor import StockProcessor
 
 import stock_db
@@ -19,9 +21,8 @@ ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
 PASSWORD = CONFIG_PARSER['Account'].get('password')
 CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
 LOGGING_PATH = CONFIG_PARSER["Logging"].get("path")
-LOGGING_FILENAME = LOGGING_PATH + "/stock" + \
-                   datetime.datetime.now().strftime("%Y%m%d") + ".log"
 
+logging.config.dictConfig(LOGGING)
 
 # logger setup
 LOGGER = logging.getLogger()
@@ -30,11 +31,6 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger(
     'selenium.webdriver.remote.remote_connection').setLevel(
         logging.WARNING)
-FH = logging.FileHandler(LOGGING_FILENAME, encoding="utf-8")
-FORMATTER = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-FH.setFormatter(FORMATTER)
-LOGGER.addHandler(FH)
 
 # set the DB connection string
 stock_db.db_connection.default_connection_string = CONNECTION_STRING
