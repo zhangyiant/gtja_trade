@@ -23,6 +23,7 @@ from stock_holding_algorithm.simple_algorithm3 import SimpleAlgorithm
 
 logger = logging.getLogger(__name__)
 
+
 class StockProcessor(object):
     '''
     classdocs
