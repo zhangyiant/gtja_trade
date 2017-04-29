@@ -10,7 +10,7 @@ import datetime
 import time
 from icbc.trade import Trade
 from icbc.processor import NobleMetalProcessor
-from icbc.seettings import LOGGING
+from icbc.settings import LOGGING
 import stock_db
 
 # Monday 7:00 - Saturday 4:00
