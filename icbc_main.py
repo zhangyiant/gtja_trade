@@ -4,11 +4,13 @@ Created on 2016年1月18日
 @author: Wenwen
 '''
 import logging
+import logging.config
 import configparser
 import datetime
 import time
 from icbc.trade import Trade
 from icbc.processor import NobleMetalProcessor
+from icbc.seettings import LOGGING
 import stock_db
 
 # Monday 7:00 - Saturday 4:00
@@ -19,16 +21,12 @@ account_name = config['Account'].get('account_name')
 password = config['Account'].get('password')
 CONNECTION_STRING = config['Database'].get('connection')
 LOGGING_PATH = config["Logging"].get("path")
-LOGGING_FILENAME = LOGGING_PATH + "/icbc" + \
-                   datetime.datetime.now().strftime("%Y%m%d") + ".log"
+
+logging.config.dictConfig(LOGGING)
 
 # logger setup
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler(LOGGING_FILENAME, encoding="utf-8")
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-logger.addHandler(fh)
 
 stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
