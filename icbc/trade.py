@@ -70,7 +70,7 @@ class Trade:
         script = "window.scrollTo(0,0)"
         self.driver.execute_script(script)
 
-        logo_xpath = "/html/body/boby/div[3]/div/div/img"
+        logo_xpath = "/html/body/boby/div[3]/div/div"
         logo_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, logo_xpath)))
         print(logo_element)
