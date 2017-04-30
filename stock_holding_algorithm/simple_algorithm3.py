@@ -1,11 +1,17 @@
-from stock_db.db_stock import StockCashTable, StockCash
-from stock_db.db_stock import StockTransactionTable, StockTransaction
+from stock_db.db_stock import StockCashTable
+from stock_db.db_stock import StockTransactionTable
 from stock_db.db_connection import get_default_db_connection
 
+
 class SimpleAlgorithm:
-    def __init__(self, symbol = None, start_price = None, stop_price = None,
-                 current_price = None, conn = None):
-        if conn == None:
+
+    def __init__(self,
+                 symbol=None,
+                 start_price=None,
+                 stop_price=None,
+                 current_price=None,
+                 conn=None):
+        if conn is None:
             self.conn = get_default_db_connection()
         else:
             self.conn = conn
@@ -72,7 +78,8 @@ class SimpleAlgorithm:
     def get_cash_value(self):
         stock_cash_table = StockCashTable(self.conn)
         stock_cash = stock_cash_table.get_stock_cash_by_symbol(self.symbol)
-        # minus the transaction service fee, the database operation need to decouple from the algorithm
+        # minus the transaction service fee,
+        # the database operation need to decouple from the algorithm
         amount = stock_cash.get_amount() - 20
         return amount
 
@@ -80,15 +87,15 @@ class SimpleAlgorithm:
         if (self.stock_quantity < 0):
             return self.get_stock_quantity_from_db()
         return self.stock_quantity
-    
+
     def set_stock_quantity(self, stock_quantity):
         self.stock_quantity = stock_quantity
         return
-    
+
     def get_stock_quantity_from_db(self):
         stock_transaction_table = StockTransactionTable(self.conn)
         stock_transaction_list = \
-            stock_transaction_table.get_stock_transaction_list_by_symbol(\
+            stock_transaction_table.get_stock_transaction_list_by_symbol(
                 self.symbol)
         quantity = 0
         for stock_transaction in stock_transaction_list:
@@ -114,7 +121,7 @@ class SimpleAlgorithm:
 
     # must be implemented
     def calculate(self):
-        
+
         expected_percentage = self.get_expected_percentage()
         current_percentage = self.get_current_percentage()
 
