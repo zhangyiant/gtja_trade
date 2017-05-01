@@ -35,7 +35,8 @@ stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 
 STOCK_PROCESSOR = StockProcessor(ACCOUNT_NAME, PASSWORD)
-logging.info(ACCOUNT_NAME, PASSWORD)
+logging.info("account: " + ACCOUNT_NAME)
+logging.info("password: " + PASSWORD)
 
 STOCK_PROCESSOR.login()
 
