@@ -63,7 +63,7 @@ class StockProcessor(object):
         """
             keep alive method
         """
-        self.trade.get_current_commission_list()
+        self.trade.enter_stock_menu()
         return
 
     def get_one_stock(self):
