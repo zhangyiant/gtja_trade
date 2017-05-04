@@ -279,13 +279,19 @@ class Trade:
         price_xpath = "/html/body/form/table[3]/tbody/" \
                       "tr/td[1]/table/tbody/tr/td/table[2]/" \
                       "tbody/tr/td/table[1]/tbody/tr[4]/td[2]"
+        buy_xpath = "/html/body/table[2]/tbody/tr[1]/td/a"
 
         self.enter_stock_menu()
         time.sleep(3)
         self.select_menu_frame()
+
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(
+                (By.XPATH, buy_xpath)))
         element = self.driver.find_element_by_xpath(
-            "/html/body/table[2]/tbody/tr[1]/td/a")
+            buy_xpath)
         element.click()
+
         time.sleep(3)
 
         self.select_main_frame()
