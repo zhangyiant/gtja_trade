@@ -817,3 +817,15 @@ class AllInvestmentsHistory(Base):
     history_id = Column(Integer, primary_key=True)
     date = Column(DateTime)
     total_value = Column(Float)
+
+
+class TradeKeepAlive(Base):
+    """
+        TradeKeepAlive
+    """
+
+    __tablename__ = "trade_keep_alive"
+
+    keep_alive_id = Column(Integer, primary_key=True)
+    app_name = Column(String(20))
+    refresh_time = Column(DateTime)
