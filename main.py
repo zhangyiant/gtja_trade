@@ -11,8 +11,11 @@ import logging.config
 
 from gtja.settings import LOGGING
 from gtja.stockprocessor import StockProcessor
+from anteestudio.trade.keep_alive import update_keep_alive
 
 import stock_db
+
+APP_NAME = "stock_trade"
 
 # read configuration
 CONFIG_PARSER = configparser.ConfigParser()
@@ -96,5 +99,7 @@ while True:
     STOCK_SYMBOL = STOCK_PROCESSOR.get_one_stock()
     STOCK_PROCESSOR.process_stock(STOCK_SYMBOL)
     time.sleep(59)
+
+    update_keep_alive(app_name=APP_NAME)
 
 STOCK_PROCESSOR.close()
