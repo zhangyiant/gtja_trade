@@ -2,18 +2,15 @@ import logging
 import unittest
 import configparser
 import stock_db
-from stock_holding_algorithm.simple_algorithm import SimpleAlgorithm
-from stock_db.db_connection import StockDbConnection
 from stock_db.db_stock import StockInfoTable
 from stock_db.db_stock import StockCashTable
 from stock_db.db_stock import StockCash
 from stock_db.db_stock import StockTransaction
 from stock_db.db_stock import StockTransactionTable
-from stock_db.db_stock import StockClosedTransaction
-from stock_db.db_stock import StockClosedTransactionTable
 from stock_db.db_utility import reset_table
 from stock_db.db_connection import get_default_db_connection
 from datetime import date
+
 
 class StockDbConnectionTest(unittest.TestCase):
     def setUp(self):
@@ -34,7 +31,7 @@ class StockDbConnectionTest(unittest.TestCase):
         stock_info_list = stock_info_table.get_all_stock_info()
         self.assertEqual(len(stock_info_list), 7)
         return
- 
+
     def test_stock_cash_sanity(self):
         stock_db_connection = get_default_db_connection()
         reset_table(stock_db_connection)
