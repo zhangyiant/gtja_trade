@@ -3,7 +3,7 @@
 '''
 import unittest
 import configparser
-from datetime import date
+from datetime import date, datetime
 import stock_db
 from stock_db.db_stock import StockClosedTransaction, \
                               StockClosedTransactionTable, \
@@ -35,8 +35,8 @@ class StockClosedTransactionTableTest(unittest.TestCase):
         stock_closed_transaction.symbol = "601398"
         stock_closed_transaction.buy_price = 4.51
         stock_closed_transaction.sell_price = 4.61
-        stock_closed_transaction.buy_date = date(2015, 11, 10)
-        stock_closed_transaction.sell_date = date(2015, 12, 30)
+        stock_closed_transaction.buy_date = datetime(2015, 11, 10, 0, 0, 0)
+        stock_closed_transaction.sell_date = datetime(2015, 12, 30, 0, 0, 0)
         stock_closed_transaction.quantity = 200
         transaction_table.add_stock_closed_transaction(
                                                   stock_closed_transaction)
@@ -55,9 +55,9 @@ class StockClosedTransactionTableTest(unittest.TestCase):
         self.assertEqual(stock_closed_transaction.sell_price,
                          4.61)
         self.assertEqual(stock_closed_transaction.buy_date,
-                         date(2015, 11, 10))
+                         datetime(2015, 11, 10, 0, 0, 0))
         self.assertEqual(stock_closed_transaction.sell_date,
-                         date(2015, 12, 30))
+                         datetime(2015, 12, 30, 0, 0, 0))
         self.assertEqual(stock_closed_transaction.quantity,
                          200)
 
@@ -85,7 +85,7 @@ class StockClosedTransactionTableTest(unittest.TestCase):
         stock_transaction_1 = StockTransaction()
         stock_transaction_1.symbol = "601398"
         stock_transaction_1.buy_or_sell = StockTransaction.BUY_FLAG
-        stock_transaction_1.date = date(2016, 5, 15)
+        stock_transaction_1.date = datetime(2016, 5, 15, 0, 0, 0)
         stock_transaction_1.quantity = 200
         stock_transaction_1.price = 4.51
         stock_transaction_table.add_stock_transaction(stock_transaction_1)
@@ -95,7 +95,7 @@ class StockClosedTransactionTableTest(unittest.TestCase):
         stock_transaction_2 = StockTransaction()
         stock_transaction_2.symbol = "601398"
         stock_transaction_2.buy_or_sell = StockTransaction.SELL_FLAG
-        stock_transaction_2.date = date(2016, 5, 16)
+        stock_transaction_2.date = datetime(2016, 5, 16, 0, 0, 0)
         stock_transaction_2.quantity = 200
         stock_transaction_2.price = 4.81
         stock_transaction_table.add_stock_transaction(stock_transaction_2)
@@ -112,9 +112,9 @@ class StockClosedTransactionTableTest(unittest.TestCase):
         self.assertEqual(stock_closed_transaction.sell_price,
                          4.81)
         self.assertEqual(stock_closed_transaction.buy_date,
-                         date(2016, 5, 15))
+                         datetime(2016, 5, 15, 0, 0, 0))
         self.assertEqual(stock_closed_transaction.sell_date,
-                         date(2016, 5, 16))
+                         datetime(2016, 5, 16, 0, 0, 0))
         self.assertEqual(stock_closed_transaction.quantity,
                          200)
 
