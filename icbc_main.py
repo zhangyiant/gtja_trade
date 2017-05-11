@@ -6,9 +6,6 @@ Created on 2016年1月18日
 import logging
 import logging.config
 import configparser
-import datetime
-import time
-from icbc.trade import Trade
 from icbc.processor import NobleMetalProcessor
 from icbc.settings import LOGGING
 from anteestudio.trade.keep_alive import update_keep_alive
