@@ -5,9 +5,12 @@ Created on 2016年1月18日
 '''
 import logging
 import logging.config
+from icbc.settings import LOGGING
+logging.config.dictConfig(LOGGING)
+
 import configparser
 from icbc.processor import NobleMetalProcessor
-from icbc.settings import LOGGING
+
 from anteestudio.trade.keep_alive import update_keep_alive
 
 import stock_db
@@ -23,7 +26,6 @@ password = config['Account'].get('password')
 CONNECTION_STRING = config['Database'].get('connection')
 LOGGING_PATH = config["Logging"].get("path")
 
-logging.config.dictConfig(LOGGING)
 
 # logger setup
 logger = logging.getLogger()
