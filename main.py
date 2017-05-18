@@ -6,10 +6,12 @@ Created on Jul 8, 2015
 import time
 import datetime
 import configparser
+
 import logging
 import logging.config
-
 from gtja.settings import LOGGING
+logging.config.dictConfig(LOGGING)
+
 from gtja.stockprocessor import StockProcessor
 from anteestudio.trade.keep_alive import update_keep_alive
 
@@ -24,8 +26,6 @@ ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
 PASSWORD = CONFIG_PARSER['Account'].get('password')
 CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
 LOGGING_PATH = CONFIG_PARSER["Logging"].get("path")
-
-logging.config.dictConfig(LOGGING)
 
 # logger setup
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
