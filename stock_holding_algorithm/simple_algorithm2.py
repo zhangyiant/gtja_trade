@@ -55,7 +55,7 @@ class SimpleAlgorithm:
     def get_expected_percentage(self):
         current_price_percentage = (self.current_price - self.start_price) / \
                                    (self.stop_price - self.start_price)
-        if (current_price_percentage >= 0 ) and \
+        if (current_price_percentage >= 0) and \
            (current_price_percentage < 0.25):
             expected_percentage = \
                 ((0.25 - current_price_percentage) / 0.25 * 0.5 + 0.5) * 100
@@ -71,8 +71,10 @@ class SimpleAlgorithm:
             (current_price_percentage <= 1):
             expected_percentage = \
                 ((1 - current_price_percentage) / 0.25 * 0.125) * 100
-        else:
-            expected_percentage = None
+        elif current_price_percentage < 0:
+            expected_percentage = 100
+        elif current_price_percentage > 1:
+            expected_percentage = 0
         return expected_percentage
 
     def get_total_value(self):

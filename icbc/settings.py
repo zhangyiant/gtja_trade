@@ -25,5 +25,13 @@ LOGGING = {
     "root": {
         "level": "DEBUG",
         "handlers": ["console", "file"]
+    },
+    "loggers": {
+        "selenium": {
+            "level": "INFO"
+        },
+        "anteestudio": {
+            "level": "INFO"
+        }
     }
 }
