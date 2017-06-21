@@ -13,8 +13,6 @@ QUANTITY = int(sys.argv[3])
 # read configuration
 CONFIG_PARSER = configparser.ConfigParser()
 CONFIG_PARSER.read("gtja_trade.ini", encoding="utf-8")
-ACCOUNT_NAME = CONFIG_PARSER['Account'].get('account_name')
-PASSWORD = CONFIG_PARSER['Account'].get('password')
 CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
 LOGGING_FILENAME = CONFIG_PARSER['Logging'].get('filename')
 
