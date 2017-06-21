@@ -829,3 +829,24 @@ class TradeKeepAlive(Base):
     keep_alive_id = Column(Integer, primary_key=True)
     app_name = Column(String(20))
     refresh_time = Column(DateTime)
+
+
+class NobleMetalPrice(Base):
+    """
+        NobleMetalPrice table
+    """
+
+    __tablename__ = "noble_metal_price"
+
+    noble_metal_price_id = Column(Integer, primary_key=True)
+    symbol = Column(
+        String(20),
+        ForeignKey("stock_info.symbol"))
+    buy_price = Column(Float)
+    sell_price = Column(Float)
+    middle_price = Column(Float)
+    highest_middle_price = Column(Float)
+    lowest_middle_price = Column(Float)
+    update_datetime = Column(
+        DateTime,
+        index=True)
