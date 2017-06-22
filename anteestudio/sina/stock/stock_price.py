@@ -1,4 +1,5 @@
 import urllib.request
+from datetime import datetime
 
 
 class StockPrice:
@@ -37,6 +38,7 @@ class StockPrice:
         self.sell_5_price = None
         self.date = None
         self.time = None
+        self.datetime = None
         return
 
     def strip_script(self, data):
@@ -51,7 +53,7 @@ class StockPrice:
         stripped_data = self.strip_script(data)
         items = stripped_data.split(",")
         print(items)
-        self.symbol = items[0]
+        self.name = items[0]
         self.opening_price = float(items[1])
         self.closing_price = float(items[2])
         self.price = float(items[3])
@@ -83,6 +85,9 @@ class StockPrice:
         self.sell_5_price = float(items[29])
         self.date = items[30]
         self.time = items[31]
+        self.datetime = datetime.strptime(
+            self.date + " " + self.time + " +0800",
+            "%Y-%m-%d %H:%M:%S %z")
         return
 
     def get_full_symbol(self, symbol):
@@ -97,6 +102,7 @@ class StockPrice:
 
     def get_price(self, symbol):
         full_symbol = self.get_full_symbol(symbol)
+        self.symbol = symbol
         url = self.url_prefix + "list=" + full_symbol
         req = urllib.request.Request(url=url)
         with urllib.request.urlopen(req) as f:
@@ -106,6 +112,7 @@ class StockPrice:
 
     def __str__(self):
         result = "股票代码: {0}\n".format(self.symbol)
+        result += "股票名称: {0}\n".format(self.name)
         result += "今日开盘价: {0}\n".format(self.opening_price)
         result += "昨日收盘价: {0}\n".format(self.closing_price)
         result += "当前价格: {0}\n".format(self.price)
@@ -137,4 +144,5 @@ class StockPrice:
         result += "卖五价格: {0}\n".format(self.sell_5_price)
         result += "日期: {0}\n".format(self.date)
         result += "时间: {0}\n".format(self.time)
+        result += "日期时间: {0}\n".format(self.datetime)
         return result
