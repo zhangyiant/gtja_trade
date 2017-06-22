@@ -2,7 +2,7 @@ import urllib.request
 from datetime import datetime
 
 
-class StockPrice:
+class StockPriceQuerier:
 
     def __init__(self):
         self.url_prefix = "http://hq.sinajs.cn/"

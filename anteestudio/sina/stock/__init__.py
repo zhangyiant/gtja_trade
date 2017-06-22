@@ -1,5 +1,5 @@
-from .stock_price import StockPrice
+from .stock_price_querier import StockPriceQuerier
 
 __all__ = [
-    "StockPrice"
+    "StockPriceQuerier"
 ]
