@@ -7,6 +7,7 @@ class StockPriceQuerier:
     def __init__(self):
         self.url_prefix = "http://hq.sinajs.cn/"
         self.symbol = None
+        self.name = None
         self.opening_price = None
         self.closing_price = None
         self.price = None
