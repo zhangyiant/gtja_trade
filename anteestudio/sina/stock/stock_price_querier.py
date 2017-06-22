@@ -52,7 +52,6 @@ class StockPriceQuerier:
     def parse(self, data):
         stripped_data = self.strip_script(data)
         items = stripped_data.split(",")
-        print(items)
         self.name = items[0]
         self.opening_price = float(items[1])
         self.closing_price = float(items[2])
