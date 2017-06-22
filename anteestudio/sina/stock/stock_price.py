@@ -85,8 +85,20 @@ class StockPrice:
         self.time = items[31]
         return
 
-    def get_price(self):
-        req = urllib.request.Request(url=self.url_prefix + "list=sh601111")
+    def get_full_symbol(self, symbol):
+        first_char = symbol[0]
+        if first_char == "6":
+            full_symbol = "sh" + symbol
+        elif first_char == "0":
+            full_symbol = "sz" + symbol
+        else:
+            full_symbol = symbol
+        return full_symbol
+
+    def get_price(self, symbol):
+        full_symbol = self.get_full_symbol(symbol)
+        url = self.url_prefix + "list=" + full_symbol
+        req = urllib.request.Request(url=url)
         with urllib.request.urlopen(req) as f:
             data = f.read().decode("GBK")
         self.parse(data)
