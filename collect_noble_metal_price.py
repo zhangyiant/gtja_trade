@@ -55,7 +55,6 @@ while True:
     if is_transaction_time():
         LOGGER.debug("Collect")
         collector.collect()
-        pass
     else:
         LOGGER.debug("Not in transaction time")
     time.sleep(30)
