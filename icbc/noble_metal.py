@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.common.exceptions import TimeoutException
 from stock_db.db_connection import get_default_db_connection
 from stock_db.db_stock import NobleMetalPrice
 
@@ -26,12 +26,18 @@ class NobleMetalPriceCollector:
         return
 
     def collect(self):
-        self.driver.get(self.link)
-        table_element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.ID, self.table_id)))
-        if table_element is None:
-            return False
+        try:
+            self.driver.get(self.link)
+            table_element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.ID, self.table_id)))
+            if table_element is None:
+                return False
+        except TimeoutException as timeout_exception:
+            LOGGER.warning(
+                "Timeout exception when fetching table. {0}".format(
+                    timeout_exception))
+            return False;
         tbody_element = table_element.find_element_by_xpath("tbody")
         tr_elements = tbody_element.find_elements_by_xpath("*")
         for tr_element in tr_elements[1:]:
