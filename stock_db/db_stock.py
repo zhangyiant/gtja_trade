@@ -829,3 +829,68 @@ class TradeKeepAlive(Base):
     keep_alive_id = Column(Integer, primary_key=True)
     app_name = Column(String(20))
     refresh_time = Column(DateTime)
+
+
+class NobleMetalPrice(Base):
+    """
+        NobleMetalPrice table
+    """
+
+    __tablename__ = "noble_metal_price"
+
+    noble_metal_price_id = Column(Integer, primary_key=True)
+    symbol = Column(
+        String(20),
+        ForeignKey("stock_info.symbol"))
+    buy_price = Column(Float)
+    sell_price = Column(Float)
+    middle_price = Column(Float)
+    highest_middle_price = Column(Float)
+    lowest_middle_price = Column(Float)
+    update_datetime = Column(
+        DateTime,
+        index=True)
+
+class StockPrice(Base):
+    """
+        StockPrice table
+    """
+
+    __tablename__ = "stock_price"
+
+    stock_price_id = Column(Integer, primary_key=True)
+    symbol = Column(
+        String(20),
+        ForeignKey("stock_info.symbol"))
+    opening_price = Column(Float)
+    closing_price = Column(Float)
+    price = Column(Float)
+    highest_price = Column(Float)
+    lowest_price = Column(Float)
+    buy_price = Column(Float)
+    sell_price = Column(Float)
+    turnover = Column(Integer)
+    amount = Column(Float(53))
+    buy_1_volume = Column(Integer)
+    buy_1_price = Column(Float)
+    buy_2_volume = Column(Integer)
+    buy_2_price = Column(Float)
+    buy_3_volume = Column(Integer)
+    buy_3_price = Column(Float)
+    buy_4_volume = Column(Integer)
+    buy_4_price = Column(Float)
+    buy_5_volume = Column(Integer)
+    buy_5_price = Column(Float)
+    sell_1_volume = Column(Integer)
+    sell_1_price = Column(Float)
+    sell_2_volume = Column(Integer)
+    sell_2_price = Column(Float)
+    sell_3_volume = Column(Integer)
+    sell_3_price = Column(Float)
+    sell_4_volume = Column(Integer)
+    sell_4_price = Column(Float)
+    sell_5_volume = Column(Integer)
+    sell_5_price = Column(Float)
+    update_datetime = Column(
+        DateTime,
+        index=True)
