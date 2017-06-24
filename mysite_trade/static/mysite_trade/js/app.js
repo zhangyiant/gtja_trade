@@ -15,6 +15,7 @@
           };
           $http.post("/mysite_trade/buy/", data).then(
             function successCallback(response) {
+              $scope.result = response.data;
               console.log(response);
             },
             function errorCallback(response) {
