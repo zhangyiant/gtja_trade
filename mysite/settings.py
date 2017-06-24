@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import configparser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,17 @@ SECRET_KEY = '-5ca5imae^fsj_8zs4#*$c94h_e1bzl@#8j=8d6i5&1povl=8q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+# sqlalchemy config
+import stock_db.db_connection
+# read configuration
+CONFIG_PARSER = configparser.ConfigParser()
+CONFIG_PARSER.read("gtja_trade.ini", encoding="utf-8")
+CONNECTION_STRING = CONFIG_PARSER['Database'].get('connection')
+
+# set the DB connection string
+stock_db.db_connection.default_connection_string = CONNECTION_STRING
 
 
 # Application definition
