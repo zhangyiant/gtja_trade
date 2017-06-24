@@ -43,6 +43,16 @@
             }
           );
         };
+        function getStockInfos() {
+          $http.get("/mysite_trade/stock_infos/").then(
+            function successCallback(response) {
+              $scope.stockInfos = response.data.results;
+            },
+            function errorCallback(response) {
+            }
+          );
+        };
+        getStockInfos();
       }
     ]
   );
