@@ -18,3 +18,4 @@ tzlocal==1.2.2
 virtualenv==15.0.1
 websockets==3.1
 wrapt==1.10.8
+AdvancedHTMLParser==7.2.0
