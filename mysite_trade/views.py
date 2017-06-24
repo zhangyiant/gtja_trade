@@ -5,6 +5,9 @@ from django.http import (
 from django.views.decorators.csrf import csrf_exempt
 from stock_db.db_connection import get_default_db_connection
 from stock_db.db_stock import StockInfo
+from gtja.utility import (
+    complete_buy_transaction,
+    complete_sell_transaction)
 import json
 
 # Create your views here.
@@ -14,14 +17,28 @@ def index(request):
 @csrf_exempt
 def buy_view(request):
     data = json.loads(request.body.decode("utf-8"))
-    print(data)
-    return JsonResponse(data)
+    symbol = data["symbol"]
+    price = data["price"]
+    quantity = data["quantity"]
+    try:
+        complete_buy_transaction(symbol, price, quantity)
+        return JsonResponse({"result": "OK"})
+    except Exception as e:
+        return JsonResponse({"result": "error",
+                             "exception": "{0}".format(e)})
 
 @csrf_exempt
 def sell_view(request):
     data = json.loads(request.body.decode("utf-8"))
-    print(data)
-    return JsonResponse(data)
+    symbol = data["symbol"]
+    price = data["price"]
+    quantity = data["quantity"]
+    try:
+        complete_sell_transaction(symbol, price, quantity)
+        return JsonResponse({"result": "OK"})
+    except Exception as e:
+        return JsonResponse({"result": "error",
+                             "exception": "{0}".format(e)})
 
 def stock_info_view(request):
     conn = get_default_db_connection()
