@@ -14,6 +14,7 @@ from icbc.settings import LOGGING
 import stock_db.db_connection
 
 from icbc import NobleMetalPriceCollector
+from anteestudio.trade.keep_alive import update_keep_alive
 
 # read configuration
 CONFIG_PARSER = configparser.ConfigParser()
@@ -29,6 +30,7 @@ LOGGER = logging.getLogger(__name__)
 
 collector = NobleMetalPriceCollector()
 
+APP_NAME = "collect_noble_metal_price"
 
 def is_transaction_time():
     time_now = datetime.datetime.now()
@@ -58,5 +60,7 @@ while True:
     else:
         LOGGER.debug("Not in transaction time")
     time.sleep(30)
+
+    update_keep_alive(app_name=APP_NAME)
 
 collector.close()

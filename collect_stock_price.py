@@ -14,6 +14,10 @@ from icbc.settings import LOGGING
 import stock_db.db_connection
 
 from anteestudio.stock import StockPriceCollector
+from anteestudio.trade.keep_alive import update_keep_alive
+
+
+APP_NAME = "collect_stock_price"
 
 # read configuration
 CONFIG_PARSER = configparser.ConfigParser()
@@ -64,5 +68,7 @@ while True:
     else:
         LOGGER.debug("Not in transaction time")
     time.sleep(30)
+
+    update_keep_alive(app_name=APP_NAME)
 
 collector.close()
