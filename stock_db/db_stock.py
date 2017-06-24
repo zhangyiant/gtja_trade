@@ -827,7 +827,7 @@ class TradeKeepAlive(Base):
     __tablename__ = "trade_keep_alive"
 
     keep_alive_id = Column(Integer, primary_key=True)
-    app_name = Column(String(20))
+    app_name = Column(String(255))
     refresh_time = Column(DateTime)
 
 
