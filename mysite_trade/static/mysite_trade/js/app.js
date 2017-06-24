@@ -8,12 +8,32 @@
       "$scope",
       "$http",
       function($scope, $http) {
-        $scope.post = function() {
+        $scope.symbol = "";
+        $scope.price = "0.0";
+        $scope.quantity = "0";
+        $scope.buy = function() {
           var data={
-            param1: "hello",
-            param2: "next"
+            symbol: $scope.symbol,
+            price: parseFloat($scope.price),
+            quantity: parseInt($scope.quantity)
           };
           $http.post("/mysite_trade/buy/", data).then(
+            function successCallback(response) {
+              $scope.result = response.data;
+              console.log(response);
+            },
+            function errorCallback(response) {
+              console.log(response);
+            }
+          );
+        };
+        $scope.sell = function() {
+          var data={
+            symbol: $scope.symbol,
+            price: parseFloat($scope.price),
+            quantity: parseInt($scope.quantity)
+          };
+          $http.post("/mysite_trade/sell/", data).then(
             function successCallback(response) {
               $scope.result = response.data;
               console.log(response);
