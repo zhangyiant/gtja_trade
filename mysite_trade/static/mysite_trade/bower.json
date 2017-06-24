@@ -1,0 +1,21 @@
+{
+  "name": "mysite_trade",
+  "homepage": "https://github.com/zhangyiant/gtja_trade",
+  "authors": [
+    "Yi Zhang <zhangyiant@hotmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.6.4",
+    "bootstrap": "^3.3.7"
+  }
+}
