@@ -8,6 +8,11 @@ from stock_db.db_stock import StockInfo
 from gtja.utility import (
     complete_buy_transaction,
     complete_sell_transaction)
+from icbc.utility import complete_buy_transaction \
+    as noble_metal_complete_buy_transaction
+from icbc.utility import complete_sell_transaction \
+    as noble_metal_complete_sell_transaction
+
 import json
 
 # Create your views here.
@@ -50,3 +55,30 @@ def stock_info_view(request):
                  "name": stock_info.name}
         results.append(stock_info_dict)
     return JsonResponse({"results": results})
+
+@csrf_exempt
+def noble_metal_buy_view(request):
+    data = json.loads(request.body.decode("utf-8"))
+    symbol = data["symbol"]
+    price = data["price"]
+    quantity = data["quantity"]
+    print(data)
+    try:
+        noble_metal_complete_buy_transaction(symbol, price, quantity)
+        return JsonResponse({"result": "OK"})
+    except Exception as e:
+        return JsonResponse({"result": "error",
+                             "exception": "{0}".format(e)})
+
+@csrf_exempt
+def noble_metal_sell_view(request):
+    data = json.loads(request.body.decode("utf-8"))
+    symbol = data["symbol"]
+    price = data["price"]
+    quantity = data["quantity"]
+    try:
+        noble_metal_complete_sell_transaction(symbol, price, quantity)
+        return JsonResponse({"result": "OK"})
+    except Exception as e:
+        return JsonResponse({"result": "error",
+                             "exception": "{0}".format(e)})

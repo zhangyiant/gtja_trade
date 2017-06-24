@@ -11,7 +11,7 @@
   </head>
   <body ng-app="myApp">
     <div ng-controller="TradeController">
-      <h1>Record buy sell transaction</h1>
+      <h1>Record stock transaction</h1>
       <form>
         <div class="form-group">
           <label for="symbol">Symbol:</label>
@@ -32,8 +32,33 @@
         </div>
         <button class="btn btn-default" ng-click="buy()">Buy</button>
         <button class="btn btn-default" ng-click="sell()">Sell</button>
-        <button class="btn btn-default" ng-click="all()">All</button>
         {{result}}
+      </form>
+      <br>
+      <h1>Record noble metal transaction</h1>
+      <form>
+        <div class="form-group">
+          <label for="nobleMetalSymbol">Symbol:</label>
+          <select class="form-control" ng-model="nobleMetalSymbol">
+            <option ng-repeat="nobleMetalInfo in nobleMetalInfos"
+                    value="{{nobleMetalInfo.symbol}}">
+              {{nobleMetalInfo.symbol}}-{{nobleMetalInfo.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nobleMetalPrice">Price:</label>
+          <input type="text" class="form-control" id="nobleMetalPrice"
+                 ng-model="nobleMetalPrice">
+        </div>
+        <div class="form-group">
+          <label for="nobleMetalQuantity">Quantity:</label>
+          <input type="text" class="form-control" id="nobleMetalQuantity"
+                 ng-model="nobleMetalQuantity">
+        </div>
+        <button class="btn btn-default" ng-click="nobleMetalBuy()">Buy</button>
+        <button class="btn btn-default" ng-click="nobleMetalSell()">Sell</button>
+        {{nobleMetalResult}}
       </form>
     </div>
   </body>
