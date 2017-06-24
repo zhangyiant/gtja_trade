@@ -46,7 +46,16 @@
         function getStockInfos() {
           $http.get("/mysite_trade/stock_infos/").then(
             function successCallback(response) {
-              $scope.stockInfos = response.data.results;
+              $scope.stockInfos = [];
+              var results = response.data.results;
+              var counter;
+              for (counter = 0; counter < results.length; counter++) {
+                var symbol = results[counter].symbol;
+                var t = symbol.charAt(0);
+                if (t <= "9" && t >= "0") {
+                  $scope.stockInfos.push(results[counter]);
+                }
+              }
             },
             function errorCallback(response) {
             }
