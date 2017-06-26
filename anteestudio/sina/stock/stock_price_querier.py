@@ -4,7 +4,8 @@ from datetime import datetime
 
 class StockPriceQuerier:
 
-    def __init__(self):
+    def __init__(self, timeout=None):
+        self.timeout = timeout
         self.url_prefix = "http://hq.sinajs.cn/"
         self.symbol = None
         self.name = None
@@ -105,7 +106,11 @@ class StockPriceQuerier:
         self.symbol = symbol
         url = self.url_prefix + "list=" + full_symbol
         req = urllib.request.Request(url=url)
-        with urllib.request.urlopen(req) as f:
+        if self.timeout is not None:
+            timeout = self.timeout
+        else:
+            timeout = 10
+        with urllib.request.urlopen(req, timeout=timeout) as f:
             data = f.read().decode("GBK")
         self.parse(data)
         return
