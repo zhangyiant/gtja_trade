@@ -55,6 +55,7 @@ def is_transaction_time():
     if time_1 > time_5:
         return False
 
+
 stock_list = ["000568", "002367", "600019",
               "600115", "600584", "601111",
               "601390", "601398", "601857",
@@ -64,7 +65,10 @@ while True:
         LOGGER.debug("Collect")
         for stock in stock_list:
             LOGGER.debug("Collect stock {0}".format(stock))
-            collector.collect(stock)
+            try:
+                collector.collect(stock)
+            except Exception as e:
+                LOGGER.error("Error: {0}".format(e))
     else:
         LOGGER.debug("Not in transaction time")
     time.sleep(30)

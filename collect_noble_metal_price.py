@@ -32,6 +32,7 @@ collector = NobleMetalPriceCollector()
 
 APP_NAME = "collect_noble_metal_price"
 
+
 def is_transaction_time():
     time_now = datetime.datetime.now()
     weekday = time_now.weekday()
@@ -56,7 +57,10 @@ def is_transaction_time():
 while True:
     if is_transaction_time():
         LOGGER.debug("Collect")
-        collector.collect()
+        try:
+            collector.collect()
+        except Exception as e:
+            LOGGER.error("Error: {0}".format(e))
     else:
         LOGGER.debug("Not in transaction time")
     time.sleep(30)
