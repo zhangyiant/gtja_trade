@@ -21,7 +21,7 @@ class NobleMetalPrice:
         self.highest_middle_price = highest_middle_price
         self.lowest_middle_price = lowest_middle_price
         return
-        
+
     def __str__(self):
         result = "symbol: {0}\n".format(self.symbol)
         result += "buy price: {0}\n".format(self.buy_price)
@@ -36,9 +36,10 @@ class NobleMetalPrice:
 
 class NobleMetalQuerier:
 
-    def __init__(self):
+    def __init__(self, timeout=None):
         self.url = "http://www.icbc.com.cn/ICBCDynamicSite/" + \
                    "Charts/GoldTendencyPicture.aspx"
+        self.timeout = timeout
         return
 
     def get_price_list(self):
@@ -46,7 +47,11 @@ class NobleMetalQuerier:
         LOGGER.debug("Get noble metal price list")
         req = urllib.request.Request(url=self.url)
         price_list = []
-        with urllib.request.urlopen(req) as f:
+        if self.timeout is not None:
+            timeout = self.timeout
+        else:
+            timeout = 10
+        with urllib.request.urlopen(req, timeout=timeout) as f:
             data = f.read().decode("utf-8")
             parser.parseStr(data)
             e = parser.getElementById("TABLE1")
