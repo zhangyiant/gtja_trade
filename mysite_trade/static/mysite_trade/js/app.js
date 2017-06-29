@@ -12,6 +12,7 @@
         $scope.price = "0.0";
         $scope.quantity = "0";
         $scope.buy = function() {
+          $scope.result = {};
           var data={
             symbol: $scope.symbol,
             price: parseFloat($scope.price),
@@ -28,6 +29,7 @@
           );
         };
         $scope.sell = function() {
+          $scope.result = {};
           var data={
             symbol: $scope.symbol,
             price: parseFloat($scope.price),
@@ -68,6 +70,7 @@
         $scope.nobleMetalPrice = "0.0";
         $scope.nobleMetalQuantity = "0";
         $scope.nobleMetalBuy = function() {
+          $scope.nobleMetalResult = {};
           var data={
             symbol: $scope.nobleMetalSymbol,
             price: parseFloat($scope.nobleMetalPrice),
@@ -84,6 +87,7 @@
           );
         };
         $scope.nobleMetalSell = function() {
+          $scope.nobleMetalResult = {};
           var data={
             symbol: $scope.nobleMetalSymbol,
             price: parseFloat($scope.nobleMetalPrice),
