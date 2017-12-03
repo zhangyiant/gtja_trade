@@ -8,7 +8,9 @@ class StockDbConnection:
     def __init__(self, connection_string):
         self.logger = logging.getLogger(__name__ + ".StockDbConnection")
 #        self.engine = create_engine('sqlite:///%s' % filename)
-        self.engine = create_engine(connection_string)
+        self.engine = create_engine(
+            connection_string,
+            pool_recycle=3600)
         self.Session = sessionmaker(bind=self.engine)
         self.conn = None
         return
