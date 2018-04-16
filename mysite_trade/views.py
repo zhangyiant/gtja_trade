@@ -62,7 +62,6 @@ def noble_metal_buy_view(request):
     symbol = data["symbol"]
     price = data["price"]
     quantity = data["quantity"]
-    print(data)
     try:
         noble_metal_complete_buy_transaction(symbol, price, quantity)
         return JsonResponse({"result": "OK"})
