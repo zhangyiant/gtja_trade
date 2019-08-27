@@ -59,7 +59,7 @@ def is_transaction_time():
 stock_list = ["000568", "002367", "600019",
               "600115", "600584", "601111",
               "601390", "601398", "601857",
-              "601998"]
+              "601998", "000001"]
 while True:
     if is_transaction_time():
         LOGGER.debug("Collect")
