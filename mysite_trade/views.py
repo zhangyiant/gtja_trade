@@ -54,6 +54,7 @@ def stock_info_view(request):
         stock_info_dict = {"symbol": stock_info.symbol,
                  "name": stock_info.name}
         results.append(stock_info_dict)
+    session.close()
     return JsonResponse({"results": results})
 
 @csrf_exempt
