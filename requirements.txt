@@ -2,7 +2,7 @@ alembic==0.8.7
 astroid==1.4.5
 asyncio==3.4.3
 colorama==0.3.7
-Django==1.11.23
+Django==1.11.28
 lazy-object-proxy==1.2.2
 Mako==1.0.4
 MarkupSafe==0.23
