@@ -16,6 +16,6 @@ six==1.10.0
 SQLAlchemy==1.0.13
 tzlocal==1.2.2
 virtualenv==15.0.1
-websockets==3.1
+websockets==9.1
 wrapt==1.10.8
 AdvancedHTMLParser==7.2.0
